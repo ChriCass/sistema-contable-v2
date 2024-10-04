@@ -74,9 +74,12 @@
                             Compra-Venta
                         </a>
                         
-                        <a href="/registrarAsiento" wire:navigate
-                            class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-500 hover:text-white">Registrar
-                            Asiento</a>
+                        <a href="{{ route('empresa.registrar-asiento', ['id' => $empresa->id]) }}" wire:navigate
+                            class="{{ request()->routeIs('empresa.registrar-asiento') ? 'bg-teal-500 text-white' : 'text-gray-900 hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-base font-medium">
+                            Registrar Asiento
+                         </a>
+                         
+                        
                         <div x-data="{ dropdownOpen: false }" class="relative">
                             <button @click="dropdownOpen = !dropdownOpen"
                                 class="text-gray-900 w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center hover:bg-teal-500 hover:text-white">
