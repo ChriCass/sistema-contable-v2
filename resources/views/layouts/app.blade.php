@@ -69,9 +69,11 @@
                             class="{{ request()->routeIs('empresa.dashboard') ? 'bg-teal-500 text-white' : 'text-gray-900 hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-base font-medium">
                             Panel principal
                         </a>
-                        <a class="{{ request()->routeIs('empresa.compra-venta') ? 'bg-teal-500 text-white' : 'text-gray-900 hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-base font-medium"
-                            href="{{ route('empresa.compra-venta', ['id' => $empresa->id]) }}" wire:navigate
-                            class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-500 hover:text-white">Compra-Venta</a>
+                        <a class="{{ request()->routeIs(['empresa.compra-venta', 'empresa.compra-venta.form']) ? 'bg-teal-500 text-white' : 'text-gray-900 hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-base font-medium"
+                            href="{{ route('empresa.compra-venta', ['id' => $empresa->id]) }}" wire:navigate>
+                            Compra-Venta
+                        </a>
+                        
                         <a href="/registrarAsiento" wire:navigate
                             class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-500 hover:text-white">Registrar
                             Asiento</a>

@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\CompraVenta;
 use App\Livewire\DashboardEmpresa;
 use App\Livewire\SeleccEmpresa;
+use App\Livewire\CompraVentaFormView;
+
+
 
 
 Route::redirect('/', '/login');
@@ -16,6 +19,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::prefix('dashboard/empresa/{id}')->group(function(){
         Route::get('/', DashboardEmpresa::class)->name('empresa.dashboard');
         Route::get('/compra-venta', CompraVenta::class)->name('empresa.compra-venta');
+        Route::get('/compra-venta-form', CompraVentaFormView::class)->name('empresa.compra-venta.form');
     });
 
 });
