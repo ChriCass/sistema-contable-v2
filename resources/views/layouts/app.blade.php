@@ -104,8 +104,11 @@
                         <a href="/home" wire:navigate
                             class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-500 hover:text-white">Hoja
                             de trabajo</a>
-                        <a href="/home" wire:navigate
-                            class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-500 hover:text-white">Diario</a>
+                            <a href="{{ route('empresa.diario', ['id' => $empresa->id]) }}" wire:navigate
+                            class="{{ request()->routeIs('empresa.diario') ? 'bg-teal-500 text-white' : 'text-gray-900 hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-base font-medium">
+                            Diario
+                         </a>
+                         
                         <a href="/home" wire:navigate
                             class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-500 hover:text-white">Pendientes</a>
                             <a href="{{ route('empresa.correntista', ['id' => $empresa->id]) }}" wire:navigate

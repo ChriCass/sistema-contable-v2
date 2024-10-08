@@ -7,7 +7,7 @@ use App\Livewire\SeleccEmpresa;
 use App\Livewire\CompraVentaFormView;
 use App\Livewire\RegistrarAsientoView;
 use App\Livewire\CorrentistaView;
-
+use App\Livewire\DiarioView;
 
 Route::redirect('/', '/login');
 
@@ -22,6 +22,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/compra-venta-form', CompraVentaFormView::class)->name('empresa.compra-venta.form');
         Route::get('/registrar-asiento', RegistrarAsientoView::class)->name('empresa.registrar-asiento');
         Route::get('/correntista', CorrentistaView::class)->name('empresa.correntista');
+        Route::get('/diario', DiarioView::class)->name('empresa.diario');
     });
 
 });
