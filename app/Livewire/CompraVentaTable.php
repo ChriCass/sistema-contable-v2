@@ -64,11 +64,13 @@ class CompraVentaTable extends Component
 
     public function NoMoreRow($index)
     {
+        
         if (isset($this->data[$index])) {
             unset($this->data[$index]);
             $this->data = array_values($this->data); // Reindexar el array
         }
     }
+    
 
     public function editRow($index)
     {
@@ -90,6 +92,7 @@ class CompraVentaTable extends Component
                     continue;
                 }
     
+                
                 // Determinar el valor de Vou
                 $vou = $this->getVou($dataItem['fecha_doc'], $dataItem['libro']);
                 $dataItem['Vou'] = $vou;

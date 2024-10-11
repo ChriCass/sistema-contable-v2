@@ -180,6 +180,62 @@ class CompraVentaForm extends Component
             'ref_int2' => 'nullable',
             'ref_int3' => 'nullable'
         ]);
+
+
+        $data = [
+            'empresaId' => $this->empresaId,
+            'libro' => $this->libro,
+            'fecha_doc' => $this->fecha_doc,
+            'fecha_ven' => $this->fecha_ven,
+            'tdoc' => $this->tdoc,
+            'ser' => $this->ser,
+            'num' => $this->num,
+            'cod_moneda' => $this->cod_moneda,
+            'tip_cam' => $this->tip_cam,
+            'opigv' => $this->opigv,
+            'bas_imp' => $this->bas_imp,
+            'igv' => $this->igv,
+            'no_gravadas' => $this->no_gravadas,
+            'isc' => $this->isc,
+            'imp_bol_pla' => $this->imp_bol_pla,
+            'otro_tributo' => $this->otro_tributo,
+            'precio' => $this->precio,
+            'glosa' => $this->glosa,
+            'mon1' => $this->mon1,
+            'mon2' => $this->mon2,
+            'mon3' => $this->mon3,
+            'cc1' => $this->cc1,
+            'cc2' => $this->cc2,
+            'cc3' => $this->cc3,
+            'fecha_emod' => $this->fecha_emod,
+            'tdoc_emod' => $this->tdoc_emod,
+            'ser_emod' => $this->ser_emod,
+            'num_emod' => $this->num_emod,
+            'fec_emi_detr' => $this->fec_emi_detr,
+            'num_const_der' => $this->num_const_der,
+            'tiene_detracc' => $this->tiene_detracc,
+            'mont_detracc' => $this->mont_detracc,
+            'ref_int1' => $this->ref_int1,
+            'ref_int2' => $this->ref_int2,
+            'ref_int3' => $this->ref_int3,
+            'estado_doc' => $this->estado_doc,
+            'estado' => $this->estado,
+            'fecha_vaucher' => $this->fecha_vaucher,
+            'usuario' => $this->usuario['id'],
+            'correntistaData' => $this->correntistaData,
+            'cnta1' => $this->cnta1['cuenta'] == '' ? null : $this->cnta1['cuenta'],
+            'cnta2' => $this->cnta2['cuenta'] == '' ? null : $this->cnta2['cuenta'],
+            'cnta3' => $this->cnta3['cuenta'] == '' ? null : $this->cnta3['cuenta'],
+            'cta_otro_t' => $this->cta_otro_t['cuenta'] == '' ? null : $this->cta_otro_t['cuenta'],
+            'cnta_precio' => $this->cnta_precio['cuenta'] == '' ? null : $this->cnta_precio['cuenta'],
+            'cta_detracc' => $this->cta_detracc['cuenta'] == '' ? null : $this->cta_detracc['cuenta'],
+            'porcentaje' => $this->porcentaje,
+        ];
+        
+    Log::info($data);
+
+
+    /**  
     
          // Preparación de los datos utilizando el servicio
     $data = $this->compraVentaService->prepararDatos(
@@ -210,7 +266,7 @@ class CompraVentaForm extends Component
         $this->ref_int3   // <---- Pasar ref_int3
     );
   
-
+    */
 
         // Dispatch para enviar los datos al componente CompraVentaTable
         $this->dispatch('dataSubmitted', $data);
@@ -220,6 +276,9 @@ class CompraVentaForm extends Component
         // Resetear campos después del submit
         $this->resetFields();
         Log::info('Campos del formulario reseteados después del submit.');
+
+    
+        
     }
 
     public function resetFields()

@@ -81,11 +81,11 @@
                         @if (!empty($data))
                             @foreach ($data as $index => $dataItem)
                                 <tr>
-                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['empresa'] ?? '-' }}</td>
+                                    <td class="px-2 py-1 border-b text-center">{{ $index ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $libros->where('N', $dataItem['libro'])->first()->DESCRIPCION ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['fecha_doc'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['fecha_ven'] ?? '-' }}</td>
-                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['correntistaData']['dni'] ?? ($dataItem['correntistaData']['ruc'] ?? '-') }}</td>
+                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['correntistaData']['dni'] ?? ($dataItem['correntistaData']['ruc_emisor'] ?? '-') }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['correntistaData']['nombre'] ?? ($dataItem['correntistaData']['nombre_o_razon_social'] ?? '-') }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $ComprobantesPago->where('N', $dataItem['tdoc'])->first()->DESCRIPCION ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['ser'] ?? '-' }}</td>
@@ -101,17 +101,17 @@
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['cod_moneda'] == 'USD' ? $montoDolares['otro_tributo'] : $dataItem['otro_tributo'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['precio'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['glosa'] ?? '-' }}</td>
-                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cnta1']['cuenta'] ?? '-' }}</td>
-                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cnta2']['cuenta'] ?? '-' }}</td>
-                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cnta3']['cuenta'] ?? '-' }}</td>
-                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cnta_precio']['cuenta'] ?? '-' }}</td>
+                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cnta1'] ?? '-' }}</td>
+                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cnta2'] ?? '-' }}</td>
+                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cnta3'] ?? '-' }}</td>
+                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cnta_precio'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['cod_moneda'] == 'USD' ? $montoDolares['mon1'] : $dataItem['mon1'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['cod_moneda'] == 'USD' ? $montoDolares['mon2'] : $dataItem['mon2'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['cod_moneda'] == 'USD' ? $montoDolares['mon3'] : $dataItem['mon3'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['cc1'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['cc2'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['cc3'] ?? '-' }}</td>
-                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cta_otro_t']['cuenta'] ?? '-' }}</td>
+                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cta_otro_t'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['fecha_emod'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['tdoc_emod'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['ser_emod'] ?? '-' }}</td>
@@ -119,7 +119,7 @@
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['fec_emi_detr'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['num_const_der'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['tiene_detracc'] ?? '-' }}</td>
-                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cta_detracc']['cuenta'] ?? '-' }}</td>
+                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['cta_detracc'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['mont_detracc'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['ref_int1'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['ref_int2'] ?? '-' }}</td>
@@ -142,7 +142,7 @@
                                     </x-button>
                                     
                                     </td>
-                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['usuario']['id'] ?? '-' }}</td>
+                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['usuario'] ?? '-' }}</td>
                                 </tr>
                             @endforeach
                         @else

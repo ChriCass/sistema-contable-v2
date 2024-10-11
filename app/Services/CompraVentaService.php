@@ -8,6 +8,48 @@ use Illuminate\Support\Facades\Log;
 
 class CompraVentaService
 {
+    public function prepararDatos($validatedData, $usuario, $empresaId, $correntistaData, $libro, $tdoc, $igv, $otro_tributo, $tiene_detracc, $precio, $mont_detracc, $mon1, $mon2, $mon3, $cc1, $cc2, $cc3, $tip_cam, $cod_moneda, $cnta1, $cnta2, $cnta3, $ref_int1, $ref_int2, $ref_int3)
+    {
+        Log::info('Preparando los datos para procesamiento...');
+        
+        $data = [];
+        foreach ($validatedData as $key => $value) {
+            if (!is_null($value) || $value === 0) {
+                $data[$key] = $value;
+            }
+        }
+        Log::info('Datos iniciales preparados: ', $data);
+
+        if (Auth::check()) {
+            $data['usuario'] = [
+                'id' => Auth::user()->id,
+                'email' => Auth::user()->email,
+            ];
+            Log::info('Información del usuario autenticado añadida: ', $data['usuario']);
+        }
+    
+        if (!empty($empresaId)) {
+            $data['empresa'] = $empresaId;
+            Log::info('ID de la empresa añadida: ' . $empresaId);
+        }
+    
+        if (!empty($correntistaData)) {
+            $data['correntistaData'] = $correntistaData;
+            Log::info('Datos del correntista añadidos: ', $correntistaData);
+        }
+
+        Log::info($data['libro']);
+
+        if ($data['libro'] == '01'){
+            Log::info('Es compras');
+        } elseif($data['libro'] == '02'){
+            Log::info('Es Ventas');
+        }
+
+
+        return $data;   
+    }
+    /** 
     public function calcularMontos(&$data, $tip_cam, $cod_moneda, $mon1, $mon2, $mon3, $igv, $otro_tributo, $bas_imp)
     {
         $montoDolares = [
@@ -291,5 +333,5 @@ public function asignarDebeHaber(&$data, $libro)
     
         return $data;
     }
-    
+    */    
 }
