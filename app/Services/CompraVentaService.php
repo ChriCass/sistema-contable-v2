@@ -40,7 +40,7 @@ class CompraVentaService
         }
     }
 
-    public function agregarDestinos($cuenta, $monto, $cc, $ref, $libro)
+    public function agregarDestinos($cuenta, $monto, $cc, $ref, $libro, $tdoc)
     {
         Log::info('Valor de libro ingresando a agregarDestinos: ' . $libro);
 
@@ -56,9 +56,17 @@ class CompraVentaService
             foreach ($destinosArray as $key => $dest) {
                 if (trim($dest) !== '') {
                     if ($libro == '01') {
-                        $DebeHaber = ($key == 'Dest1D' || $key == 'Dest2D') ? 1 : 2;
+                        if ($tdoc != '07') {
+                            $DebeHaber = ($key == 'Dest1D' || $key == 'Dest2D') ? 1 : 2;
+                        } else {
+                            $DebeHaber = ($key == 'Dest1D' || $key == 'Dest2D') ? 2 : 1;
+                        }
                     } else {
-                        $DebeHaber = ($key == 'Dest1D' || $key == 'Dest2D') ? 2 : 1;
+                        if ($tdoc != '07') {
+                            $DebeHaber = ($key == 'Dest1D' || $key == 'Dest2D') ? 2 : 1;
+                        } else {
+                            $DebeHaber = ($key == 'Dest1D' || $key == 'Dest2D') ? 1 : 2;
+                        }
                     }
 
                     Log::info('Asignación de DebeHaber', [
@@ -113,20 +121,24 @@ class CompraVentaService
         if ($tdoc != '07') {
             Log::info('Libro es 01 y tdoc no es 07.');
 
+            
             $data['cuenta_igv'] = [
                 'DebeHaber' => 1,
-                'valor' => 1673,
-                'igv' => $igv,
+                'cuenta' => 1673,
+                'monto' => $igv,
             ];
 
             Log::info('Asignado cuenta IGV:', $data['cuenta_igv']);
+            
 
             if (!empty($otro_tributo)) {
                 $data['cta_otro_t']['DebeHaber'] = 1;
+                $data['cta_otro_t']['monto'] = $otro_tributo;
                 Log::info('Otro tributo no está vacío, asignado cta_otro_t DebeHaber a 1.');
             }
 
             if (empty($tiene_detracc) || $tiene_detracc === 'no') {
+                Log::info($data['cnta_precio']);
                 $data['cnta_precio']['DebeHaber'] = 2;
                 $data['cnta_precio']['precioTotal'] = $precio;
 
@@ -136,7 +148,10 @@ class CompraVentaService
                 ]);
             } else {
                 if (!empty($mont_detracc)) {
+                    $data['cnta_precio']['DebeHaber'] = 2;
+                    $data['cnta_precio']['precioTotal'] = $precio - $mont_detracc;
                     $data['cta_detracc']['DebeHaber'] = 2;
+                    $data['cta_detracc']['monto'] = $mont_detracc;
                     Log::info('MontDetracc no está vacío. Asignado cta_detracc DebeHaber a 2.');
                 }
             }
@@ -145,14 +160,15 @@ class CompraVentaService
 
             $data['cuenta_igv'] = [
                 'DebeHaber' => 2,
-                'valor' => 1673,
-                'igv' => $igv,
+                'cuenta' => 1673,
+                'monto' => $igv,
             ];
 
             Log::info('Asignado cuenta IGV en else (tdoc es 07):', $data['cuenta_igv']);
 
             if (!empty($otro_tributo)) {
                 $data['cta_otro_t']['DebeHaber'] = 2;
+                $data['cta_otro_t']['monto'] = $otro_tributo;
                 Log::info('Otro tributo no está vacío, asignado cta_otro_t DebeHaber a 2.');
             }
 
@@ -166,56 +182,107 @@ class CompraVentaService
                 ]);
             } else {
                 if (!empty($mont_detracc)) {
+                    $data['cnta_precio']['DebeHaber'] = 1;
+                    $data['cnta_precio']['precioTotal'] = $precio - $mont_detracc;
                     $data['cta_detracc']['DebeHaber'] = 1;
+                    $data['cta_detracc']['monto'] = $mont_detracc;
                     Log::info('MontDetracc no está vacío en else (tdoc es 07). Asignado cta_detracc DebeHaber a 1.');
                 }
             }
         }
     } else {
+
         Log::info('Libro no es 01.');
 
-        $data['cuenta_igv'] = [
-            'DebeHaber' => 2,
-            'valor' => 40111,
-            'igv' => $igv,
-        ];
+        if ($tdoc != '07') {
 
-        Log::info('Asignado cuenta IGV en else:', $data['cuenta_igv']);
-
-        if (!empty($otro_tributo)) {
-            $data['cta_otro_t']['DebeHaber'] = 2;
-            Log::info('Otro tributo no está vacío, asignado cta_otro_t DebeHaber a 2.');
-        }
-
-        if (empty($tiene_detracc) || $tiene_detracc === 'no') {
-            $data['cnta_precio']['DebeHaber'] = 1;
-            $data['cnta_precio']['precioTotal'] = $precio;
-
-            Log::info('No tiene detracción o tiene_detracc es "no" en else. Asignado cnta_precio:', [
-                'DebeHaber' => $data['cnta_precio']['DebeHaber'],
-                'precioTotal' => $data['cnta_precio']['precioTotal']
-            ]);
+            $data['cuenta_igv'] = [
+                'DebeHaber' => 2,
+                'cuenta' => 40111,
+                'monto' => $igv,
+            ];
+    
+            Log::info('Asignado cuenta IGV en else:', $data['cuenta_igv']);
+    
+            if (!empty($otro_tributo)) {
+                $data['cta_otro_t']['DebeHaber'] = 2;
+                $data['cta_otro_t']['monto'] = $otro_tributo;
+                Log::info('Otro tributo no está vacío, asignado cta_otro_t DebeHaber a 2.');
+            }
+    
+            if (empty($tiene_detracc) || $tiene_detracc === 'no') {
+                $data['cnta_precio']['DebeHaber'] = 1;
+                $data['cnta_precio']['precioTotal'] = $precio;
+    
+                Log::info('No tiene detracción o tiene_detracc es "no" en else. Asignado cnta_precio:', [
+                    'DebeHaber' => $data['cnta_precio']['DebeHaber'],
+                    'precioTotal' => $data['cnta_precio']['precioTotal']
+                ]);
+            } else {
+                if (!empty($mont_detracc)) {
+                    $data['cta_detracc']['DebeHaber'] = 1;
+                    $data['cnta_precio']['precioTotal'] = $precio - $mont_detracc;
+                    $data['cta_detracc']['DebeHaber'] = 1;
+                    $data['cta_detracc']['monto'] = $mont_detracc;
+                    Log::info('MontDetracc no está vacío en else. Asignado cta_detracc DebeHaber a 1.');
+                }
+            }
         } else {
-            if (!empty($mont_detracc)) {
-                $data['cta_detracc']['DebeHaber'] = 1;
-                Log::info('MontDetracc no está vacío en else. Asignado cta_detracc DebeHaber a 1.');
+            $data['cuenta_igv'] = [
+                'DebeHaber' => 1,
+                'cuenta' => 40111,
+                'monto' => $igv,
+            ];
+    
+            Log::info('Asignado cuenta IGV en else:', $data['cuenta_igv']);
+    
+            if (!empty($otro_tributo)) {
+                $data['cta_otro_t']['DebeHaber'] = 1;
+                $data['cta_otro_t']['monto'] = $otro_tributo;
+                Log::info('Otro tributo no está vacío, asignado cta_otro_t DebeHaber a 2.');
+            }
+    
+            if (empty($tiene_detracc) || $tiene_detracc === 'no') {
+                $data['cnta_precio']['DebeHaber'] = 2;
+                $data['cnta_precio']['precioTotal'] = $precio;
+    
+                Log::info('No tiene detracción o tiene_detracc es "no" en else. Asignado cnta_precio:', [
+                    'DebeHaber' => $data['cnta_precio']['DebeHaber'],
+                    'precioTotal' => $data['cnta_precio']['precioTotal']
+                ]);
+            } else {
+                if (!empty($mont_detracc)) {
+                    $data['cta_detracc']['DebeHaber'] = 2;
+                    $data['cnta_precio']['precioTotal'] = $precio - $mont_detracc;
+                    $data['cta_detracc']['DebeHaber'] = 2;
+                    $data['cta_detracc']['monto'] = $mont_detracc;
+                    Log::info('MontDetracc no está vacío en else. Asignado cta_detracc DebeHaber a 1.');
+                }
             }
         }
+
+        
     }
 
     Log::info('Finalizando validacionesLibros con los datos:', $data);
 }
 
-public function asignarDebeHaber(&$data, $libro)
+public function asignarDebeHaber(&$data, $libro, $cc, $ref, $mon1, $mon2, $mon3, $tdoc, $ref_int1, $ref_int2, $ref_int3)
 {
     Log::info('Iniciando asignación de DebeHaber según el libro: ' . $libro);
 
     // Procesar cnta1, cnta2, cnta3
     foreach (['cnta1', 'cnta2', 'cnta3'] as $cuentaKey) {
         if (!empty($data[$cuentaKey]['cuenta'])) {
-            $DebeHaber = ($libro == '01') ? 1 : 2;
+            $DebeHaber = ($libro == '01') ? (($tdoc != '07') ? 1 : 2) : (($tdoc != '07') ? 2 : 1);
             $data[$cuentaKey]['DebeHaber'] = $DebeHaber;
-
+            $data[$cuentaKey]['CC'] = $cc;
+            $data[$cuentaKey]['ref'] = (substr($cuentaKey, -1) == '1') ? $ref_int1
+                                        : ((substr($cuentaKey, -1) == '2') ? $ref_int2 
+                                        : $ref_int3);
+            $data[$cuentaKey]['monto'] = (substr($cuentaKey, -1) == '1') ? $mon1 
+                                        : ((substr($cuentaKey, -1) == '2') ? $mon2 
+                                        : $mon3);
             Log::info('Asignación de DebeHaber para ' . $cuentaKey, [
                 'cuenta' => $data[$cuentaKey]['cuenta'],
                 'DebeHaber' => $data[$cuentaKey]['DebeHaber'],
@@ -231,7 +298,7 @@ public function asignarDebeHaber(&$data, $libro)
     public function prepararDatos($validatedData, $usuario, $empresaId, $correntistaData, $libro, $tdoc, $igv, $otro_tributo, $tiene_detracc, $precio, $mont_detracc, $mon1, $mon2, $mon3, $cc1, $cc2, $cc3, $tip_cam, $cod_moneda, $cnta1, $cnta2, $cnta3, $ref_int1, $ref_int2, $ref_int3)
     {
         Log::info('Preparando los datos para procesamiento...');
-        
+
         $data = [];
         foreach ($validatedData as $key => $value) {
             if (!is_null($value) || $value === 0) {
@@ -265,6 +332,7 @@ public function asignarDebeHaber(&$data, $libro)
         $this->calcularMontos($data, $tip_cam, $cod_moneda, $mon1, $mon2, $mon3, $igv, $otro_tributo, $bas_imp = $data['bas_imp'] ?? 0);
         Log::info('Montos calculados: ', $data);
     
+
         // Asegurarse de pasar correctamente $cnta1, $cnta2, $cnta3
         foreach (['cnta1', 'cnta2', 'cnta3'] as $cuentaKey) {
             $cuenta = ${$cuentaKey};
@@ -272,8 +340,10 @@ public function asignarDebeHaber(&$data, $libro)
                 $monto = ${"mon" . substr($cuentaKey, -1)};
                 $cc = ${"cc" . substr($cuentaKey, -1)};
                 $ref = ${"ref_int" . substr($cuentaKey, -1)};
+                Log::info('Antes de data',$data);
                 Log::info('Antes de agregar destinos para ' . $cuentaKey . ': Libro - ' . $data['libro']);
-                $cuentaDestinos = $this->agregarDestinos($cuenta['cuenta'], $monto, $cc, $ref, $data['libro']);
+
+                $cuentaDestinos = $this->agregarDestinos($cuenta['cuenta'], $monto, $cc, $ref, $data['libro'], $tdoc);
                 if (!empty($cuentaDestinos)) {
                     $data["{$cuentaKey}_destinos"] = $cuentaDestinos;
                     Log::info('Destinos añadidos para ' . $cuentaKey . ': ', $cuentaDestinos);
@@ -288,6 +358,9 @@ public function asignarDebeHaber(&$data, $libro)
         }
     
         Log::info('Datos finales con cálculos y destinos: ', $data);
+
+        $this->asignarDebeHaber($data, $libro, $cc, $ref, $mon1, $mon2, $mon3, $tdoc, $ref_int1,$ref_int2,$ref_int3);
+        Log::info('Debes y Haberes asignados: ', $data);
     
         return $data;
     }

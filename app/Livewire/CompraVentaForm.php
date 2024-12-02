@@ -9,11 +9,12 @@ use App\Models\PlanContable;
 use App\Models\Opigv;
 use App\Models\EstadoDocumento;
 use App\Models\Estado;
+use App\Models\CentroDeCostos;
 use App\Models\TipoComprobantePagoDocumento;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use App\Services\CompraVentaService;
-
+use SebastianBergmann\Type\TrueType;
 
 class CompraVentaForm extends Component
 {
@@ -49,7 +50,13 @@ class CompraVentaForm extends Component
         'otro_tributo' => 'nullable|numeric',
     ];
 
-      
+    public $mostrarFormulario = false; // Propiedad para controlar visibilidad
+
+    public function toggleFormulario()
+    {
+        $this->mostrarFormulario = !$this->mostrarFormulario;
+        $this->resetFields();
+    }
 
     public function mount()
     {
@@ -89,6 +96,7 @@ class CompraVentaForm extends Component
         $this->tip_cam = is_numeric($data['precio_venta']) ? round((float)$data['precio_venta'], 2) : 0.00;
     }
 
+    
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
@@ -116,17 +124,23 @@ class CompraVentaForm extends Component
         } else {
             $this->igv = null;
         }
+    }    
+
+    public function updatedigv($value){
+        $this->igv = $value;
+        $this -> calcularPrecio();
     }
     
     public function calcularPrecio()
     {
         $basImp = floatval($this->bas_imp ?: 0);
         $igv = floatval($this->igv ?: 0);
+        $no_gravadas = floatval($this->no_gravadas ?: 0);
         $isc = floatval($this->isc ?: 0);
         $impBolPla = floatval($this->imp_bol_pla ?: 0);
         $otroTributo = floatval($this->otro_tributo ?: 0);
     
-        $this->precio = round($basImp + $igv + $isc + $impBolPla + $otroTributo, 2);
+        $this->precio = round($basImp + $igv + $no_gravadas + $isc + $impBolPla + $otroTributo, 2);
     }
     
 
@@ -134,7 +148,7 @@ class CompraVentaForm extends Component
     public function submit()
     {
         Log::info('Iniciando el proceso de submit en CompraVentaForm. Valor actual de editIndex: ' . $this->editIndex);
-    
+
         // Validación de los datos
         $validatedData = $this->validate([
             'correntistaData' => 'required',
@@ -146,6 +160,7 @@ class CompraVentaForm extends Component
             'tdoc' => 'required',
             'cod_moneda' => 'required|in:PEN,USD',
             'opigv' => 'required',
+            'porcentaje' => 'required',
             'bas_imp' => 'required',
             'igv' => 'required',
             'cnta_precio.cuenta' => 'required',
@@ -154,7 +169,7 @@ class CompraVentaForm extends Component
             'mon1' => 'required',
             'estado_doc' => 'required',
             'estado' => 'required|integer',
-            'ser' => 'nullable',
+            'ser' => 'required',
             'tip_cam' => 'nullable',
             'no_gravadas' => 'nullable',
             'isc' => 'nullable',
@@ -180,6 +195,65 @@ class CompraVentaForm extends Component
             'ref_int2' => 'nullable',
             'ref_int3' => 'nullable'
         ]);
+
+        $basImp = floatval($this->bas_imp ?: 0);
+        $no_gravadas = floatval($this->no_gravadas ?: 0);
+        $isc = floatval($this->isc ?: 0);
+        $impBolPla = floatval($this->imp_bol_pla ?: 0);
+        $otroTributo = floatval($this->otro_tributo ?: 0);
+        $valCabeceras = round($basImp + $no_gravadas + $isc + $impBolPla + $otroTributo, 2);
+        $mon1 = floatval($this->mon1 ?: 0);
+        $mon2 = floatval($this->mon2 ?: 0);
+        $mon3 = floatval($this->mon3 ?: 0);
+        $valMon = round($mon1+$mon2+$mon3,2);
+        Log::info("ValCab:".$valCabeceras." valMon: ".$valMon);
+        if($valCabeceras <> $valMon){
+            session()->flash('error', "La sumatoria de montos de cabeceras: ".$valCabeceras. " con la suma de las montos asignados a cuentas: ".$valMon." no cuadra");
+            return;
+        }
+        if (!empty($this->otro_tributo) && empty($this->cta_otro_t['cuenta'])) {
+            session()->flash('error', "Si pones un monto en otros tributos, necesitas una cuenta");
+            return;
+        }        
+        if (!empty($this->cta_otro_t['cuenta']) && empty($this->otro_tributo)) {
+            session()->flash('error', "Si pones una cuenta en otros tributos, necesitas un monto");
+            return;
+        }
+
+        if (!empty($this->mon2) && empty($this->cnta2['cuenta'])) {
+            session()->flash('error', "Si pones un monto en moneda2, necesitas una cuenta2");
+            return;
+        }        
+        if (!empty($this->cnta2['cuenta']) && empty($this->mon2)) {
+            session()->flash('error', "Si pones una cuenta en cuenta2, necesitas un moneda2");
+            return;
+        }
+
+        if (!empty($this->mon3) && empty($this->cnta3['cuenta'])) {
+            session()->flash('error', "Si pones un monto en moneda3, necesitas una cuenta3");
+            return;
+        }        
+        if (!empty($this->cnta3['cuenta']) && empty($this->mon3)) {
+            session()->flash('error', "Si pones una cuenta en cuenta3, necesitas un moneda3");
+            return;
+        }
+        // Validación de cuentas
+        if (!$this->validarCuenta($this->cnta1['cuenta'], "La cuenta1 no se encuentra en el Plan Contable") ||
+        !$this->validarCuenta($this->cnta2['cuenta'], "La cuenta2 no se encuentra en el Plan Contable") ||
+        !$this->validarCuenta($this->cnta3['cuenta'], "La cuenta3 no se encuentra en el Plan Contable") ||
+        !$this->validarCuenta($this->cnta_precio['cuenta'], "La cuenta Precio no se encuentra en el Plan Contable") ||
+        !$this->validarCuenta($this->cta_otro_t['cuenta'], "La cuenta Otro Tributo no se encuentra en el Plan Contable") ||
+        !$this->validarCuenta($this->cta_detracc['cuenta'], "La cuenta de Detracción no se encuentra en el Plan Contable")) {
+        return;
+        }
+
+        // Validación de centros de costos
+        if (!$this->validarCentroCostos($this->cc1, "El Centro de costos 1 no es válido") ||
+        !$this->validarCentroCostos($this->cc2, "El Centro de costos 2 no es válido") ||
+        !$this->validarCentroCostos($this->cc3, "El Centro de costos 3 no es válido")) {
+        return;
+        }
+        Log::info('Terminando validacion');
     
          // Preparación de los datos utilizando el servicio
     $data = $this->compraVentaService->prepararDatos(
@@ -220,6 +294,73 @@ class CompraVentaForm extends Component
         // Resetear campos después del submit
         $this->resetFields();
         Log::info('Campos del formulario reseteados después del submit.');
+        $this->mostrarFormulario = false;
+    }
+
+    public function modal($tra){
+        $modal['modal'] = True;
+        $modal['traspaso'] = $tra;
+        $this->dispatch('ModalCuentas', $modal); 
+    }
+
+    public function modalCentroCostos($tra)
+    {
+        // Registra en los logs para verificar que el método está siendo llamado
+        Log::info('traspaso');
+        
+        // Crear un array con los datos que serán enviados en el evento
+        $modal['modal'] = true; // El modal se abre
+        $modal['traspaso'] = $tra; // Se asigna el valor del traspaso
+        
+        Log::info($modal);
+        // Utiliza 'On' para emitir el evento 'ModalCC' junto con los datos
+        $this->dispatch('CentroCostos', $modal); 
+    }
+
+
+    #[On('TraspasoCnta1')]
+    public function handleTraspasoCnta1($traspado){
+        $this -> cnta1['cuenta'] = $traspado['CtaCtable'];
+    }
+
+    #[On('TraspasoCnta2')]
+    public function handleTraspasoCnta2($traspado){
+        $this -> cnta2['cuenta'] = $traspado['CtaCtable'];
+    }
+
+    #[On('TraspasoCnta3')]
+    public function handleTraspasoCnta3($traspado){
+        $this -> cnta3['cuenta'] = $traspado['CtaCtable'];
+    }
+
+    #[On('TraspasoCntaPrecio')]
+    public function handleTraspasoCntaPrecio($traspado){
+        $this -> cnta_precio['cuenta'] = $traspado['CtaCtable'];
+    }
+
+    #[On('Traspasocta_otro_t')]
+    public function handleTraspasocta_otro_t($traspado){
+        $this -> cta_otro_t['cuenta'] = $traspado['CtaCtable'];
+    }
+
+    #[On('cta_detracc')]
+    public function handlecta_detracc($traspado){
+        $this -> cta_detracc['cuenta'] = $traspado['CtaCtable'];
+    }
+
+    #[On('TraspasoCC1')]
+    public function handleTraspasoCC1($traspado){
+        $this -> cc1 = $traspado['Id'];
+    }
+
+    #[On('TraspasoCC2')]
+    public function handleTraspasoCC2($traspado){
+        $this -> cc2 = $traspado['Id'];
+    }
+
+    #[On('TraspasoCC3')]
+    public function handleTraspasoCC3($traspado){
+        $this -> cc3 = $traspado['Id'];
     }
 
     public function resetFields()
@@ -277,6 +418,29 @@ class CompraVentaForm extends Component
 
     }
 
+    // Método para validar si la cuenta existe en el Plan Contable
+    private function validarCuenta($cuenta, $mensajeError) {
+        if (!empty($cuenta)) {
+            $cuentaValida = PlanContable::where('CtaCtable', $cuenta)->first();
+            if (!$cuentaValida) {
+                session()->flash('error', $mensajeError);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Método para validar si el Centro de Costos existe
+    private function validarCentroCostos($cc, $mensajeError) {
+        if (!empty($cc)) {
+            $centroValido = CentroDeCostos::where('Id', $cc)->first();
+            if (!$centroValido) {
+                session()->flash('error', $mensajeError);
+                return false;
+            }
+        }
+        return true;
+    }
     
     public function render()
     {

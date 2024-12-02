@@ -4,6 +4,9 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Empresa;
+use App\Models\Libro;
+use App\Models\Mes;
+use App\Models\TipoDeMoneda;
 
 class RegistrarAsientoView extends Component
 {
@@ -11,6 +14,21 @@ class RegistrarAsientoView extends Component
     public $rows = []; // Propiedad para almacenar las filas
     public $empresa;
     public $empresaId;
+    public $libro;
+    public $mes;
+    public $moneda;
+    public $index;
+    public $options = [
+        ['value' => '001', 'label' => 'Option 1'],
+        ['value' => '002', 'label' => 'Option 2'],
+        ['value' => '003', 'label' => 'Option 3'],
+        // Agrega más opciones aquí
+    ];
+
+    public $filteredOptions = []; // Opciones filtradas
+    public $query = ''; // Entrada del usuario
+    public $selectedIndex = null; // Índice de fila en edición
+
 
     public function mount($id)
     {
@@ -18,6 +36,35 @@ class RegistrarAsientoView extends Component
         $this->empresaId = $this->empresa->id;
         // Inicializa con una fila vacía
         $this->rows[] = $this->newRow();
+        $this->libro = Libro::all();
+        $this->mes = Mes::all();
+        $this->moneda = TipoDeMoneda::whereIn('COD', ['PEN', 'USD'])->get();
+        
+
+        $this->rows = [
+            [
+                'cn' => '',
+                'descripcion' => '',
+                'debe_soles' => '',
+                'haber_soles' => '',
+                'debe_dolares' => '',
+                'haber_dolares' => '',
+                'tc' => '',
+                'glosa_especifica' => '',
+                'numero' => '',
+                'razon_social' => '',
+                'tdoc' => '',
+                'serie' => '',
+                'num' => '',
+                'npag' => '',
+                'tpago' => '',
+                'descripcion_pago' => '',
+                'cc' => '',
+                'estado' => '',
+                'orden' => ''
+            ]
+        ];
+    
     }
 
     public function newRow()
@@ -47,10 +94,28 @@ class RegistrarAsientoView extends Component
 
     public function addRow()
     {
-        // Añade una nueva fila vacía al arreglo
-        $this->rows[] = $this->newRow();
+        $this->rows[] = [
+            'cn' => '',
+            'descripcion' => '',
+            'debe_soles' => '',
+            'haber_soles' => '',
+            'debe_dolares' => '',
+            'haber_dolares' => '',
+            'tc' => '',
+            'glosa_especifica' => '',
+            'numero' => '',
+            'razon_social' => '',
+            'tdoc' => '',
+            'serie' => '',
+            'num' => '',
+            'npag' => '',
+            'tpago' => '',
+            'descripcion_pago' => '',
+            'cc' => '',
+            'estado' => '',
+            'orden' => ''
+        ];
     }
-
     public function saveRows($rows)
     {
         // Aquí puedes iterar sobre $rows y guardar los datos en la base de datos
@@ -63,6 +128,7 @@ class RegistrarAsientoView extends Component
         // Opcionalmente, puedes enviar un mensaje de éxito a la vista:
         session()->flash('message', 'Las filas se han guardado correctamente.');
     }
+
 
     public function render()
     {

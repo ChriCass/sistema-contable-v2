@@ -1,10 +1,20 @@
 <div>
-
+@if (session()->has('error'))
+<x-alert title="Error!" negative class="mb-3">
+    {{ session('error') }}
+</x-alert>
+@elseif ((session()->has('message')))
+<x-alert title="Success" positive padding="small">
+    {{ session('message') }}
+</x-alert>
+@endif
 <x-card class="my-5">
     <div class=" mb-5">
         <h5 class="font-bold">Subir mediante excel:</h5>
     </div>
-    
+    <div class="my-4 flex justify-center">
+        <x-button teal label="Descargar Plantilla" wire:click="Plantilla"/>
+    </div>
     <div x-data="{ fileName: '' }" class="flex flex-col items-center justify-center w-full">
         <label for="file-upload" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-400 rounded-lg cursor-pointer hover:border-gray-600">
             <div class="flex flex-col items-center justify-center pt-5 pb-6" x-show="!fileName">
@@ -24,12 +34,12 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400" x-text="fileName"></p>
             </div>
     
-            <input id="file-upload" type="file" accept=".xls,.xlsx" class="hidden" @change="fileChosen">
+            <input id="file-upload" type="file" accept=".xls,.xlsx" class="hidden" wire:model="excelFile" @change="fileChosen">
         </label>
     </div>
 
     <div class="my-4 flex justify-center">
-        <x-button teal label="Procesar" />
+        <x-button teal label="Procesar" wire:click="Procesar"/>
     </div>
 </x-card>
 

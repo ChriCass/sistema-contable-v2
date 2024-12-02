@@ -4,6 +4,9 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Empresa;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+
 class DashboardEmpresa extends Component
 {   
     
@@ -12,6 +15,9 @@ class DashboardEmpresa extends Component
     public function mount($id)
     {
         $this->empresa = Empresa::findOrFail($id);
+        Log::info('Estas en la empresa:'.$this->empresa);
+        Session::put('EmpresaId', $this->empresa);
+
     }
     public function render()
     {   
