@@ -15,15 +15,11 @@ class PlanContable extends Model
       public $timestamps = false;
   
       // Define la clave primaria si no es 'id'
-      protected $primaryKey = 'CtaCtable';
-  
-      // Configuración del tipo de clave primaria y si se autoincrementa
-      protected $keyType = 'string';
-      public $incrementing = false;
+      protected $primaryKey = 'id';
   
       // Define los atributos que se pueden asignar masivamente
       protected $fillable = [
-          'CtaCtable', 'Descripcion', 'Nivel', 'Dest1D', 'Dest1H', 'Dest2D', 'Dest2H',
+          'id','id_empresas','CtaCtable', 'Descripcion', 'Nivel', 'Dest1D', 'Dest1H', 'Dest2D', 'Dest2H',
           'Ajust79', 'Esf', 'Ern', 'Erf', 'CC', 'Libro'
       ];
   

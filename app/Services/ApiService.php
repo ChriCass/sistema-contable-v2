@@ -4,9 +4,13 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Correntista;
+use Illuminate\Support\Facades\Session;
 
 class ApiService
 {
+
+    public $empresasId;
+
     public function apiRuc($ruc) { // Abelardo = Conexion a API para los RUCs
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -141,6 +145,9 @@ class ApiService
     }
 
     public function REntidad($docIdenId,$numEnt){ // Abelardo = Funcion que recoje los DNIs y RUC y los envia a sus diferentes
+        
+        $this->empresasId = Session::get('EmpresaId');
+
         if($docIdenId == '1'){
             return $this -> validarDNI($docIdenId,$numEnt);           
         }elseif($docIdenId == '6'){
@@ -151,6 +158,7 @@ class ApiService
 
     public function validacionConDB ($NDoc){ // Abelardo = Funcion que valida el id con la DB
         $entidad = Correntista::where('ruc_emisor',$NDoc)
+                    ->where('id_empresas',$this->empresasId['id'])
                     -> get()
                     -> toarray();
         if (count($entidad) <> 0) {
@@ -172,7 +180,8 @@ class ApiService
                 'provincia' => $datosAPasar['provincia'],
                 'distrito' => $datosAPasar['distrito'],
                 'direccion' => $datosAPasar['direccion'],
-                'idt02doc' => $datosAPasar['idt02doc']
+                'idt02doc' => $datosAPasar['idt02doc'],
+                'id_empresas' => $this -> empresasId['id'],
             ]);
         } catch (\Exception $e) {
             Log::error("Error al insertar en Correntista: " . $e->getMessage());

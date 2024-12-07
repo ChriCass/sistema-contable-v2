@@ -19,6 +19,7 @@ use App\Models\CentroDeCostos;
 use App\Models\Estado;
 use App\Models\EstadoDocumento;
 use App\Models\Tabla;
+use App\Models\Correntista;
 use Illuminate\Support\Facades\Session;
 use App\Services\CompraVentaService;
 use Illuminate\Support\Facades\DB;
@@ -280,7 +281,7 @@ class RecepctorExcel extends Component
         }
 
         // Validación del Libro
-        if (Libro::whereIn('N', ['01', '02'])->exists()) {
+        if (Libro::whereIn('N', ['01', '02'])->where('id_empresa',$this->empresaId['id'])->exists()) {
             $validatedData['libro'] = $row['Libro'];
             Log::info("Número de libro válido para la fila " . $row['fila'], [
                 'libro' => $row['Libro']
@@ -299,10 +300,10 @@ class RecepctorExcel extends Component
             'tdoc' => $row['tdoc'],
             'Corrent' => $row['Corrent']
         ]);
-        $data = $this->ApiService->REntidad($row['TIPO DOC IDEN'], $row['NUM IDENT']);
+        $data = $this->ApiService->REntidad($row['tdoc'], $row['Corrent']);
         if ($data['success'] == 1) {
             $correntistaData = $data['desc'];
-            $validatedData['NUM IDENT'] = $correntistaData;
+            $validatedData['correntistaData'] = $correntistaData;
         } else {
             $Ndata['success'] = 2;
             $Ndata['error'] = "La fila número " . $row['fila'] . " " . $data['error'];
@@ -487,7 +488,7 @@ class RecepctorExcel extends Component
             // Verificar si el valor existe en $row y no es nulo
             if (isset($row[$cnta]) && !is_null($row[$cnta])) {
                 // Verificar si la cuenta existe en PlanContable
-                if (PlanContable::where('CtaCtable', $row[$cnta])->exists()) {
+                if (PlanContable::where('CtaCtable', $row[$cnta])->where('id_empresas',$this->empresaId['id'])->exists()) {
                     $validatedData[$cnta] = [
                         'cuenta' => $row[$cnta],
                         'DebeHaber' => null,
@@ -512,7 +513,7 @@ class RecepctorExcel extends Component
             }
         }
 
-        if (PlanContable::where('CtaCtable', $row['CntaPrecio'])->exists()) {
+        if (PlanContable::where('CtaCtable', $row['CntaPrecio'])->where('id_empresas',$this->empresaId['id'])->exists()) {
             $validatedData['CntaPrecio'] = [
                 'cuenta' => $row['CntaPrecio'],
                 'DebeHaber' => null,
@@ -541,7 +542,7 @@ class RecepctorExcel extends Component
 
             if (isset($row[$CC]) && !is_null($row[$CC])) {
                 // Verificar si el centro de costos existe en la base de datos
-                if (CentroDeCostos::where('Id', $row[$CC])->exists()) {
+                if (CentroDeCostos::where('Id', $row[$CC])->where('id_empresa',$this->empresaId['id'])->exists()) {
                     $validatedData[$CC] = $row[$CC];
                     Log::info("Centro de costo válido en la fila " . $row['fila'], [
                         'campo' => $CC,
@@ -939,25 +940,33 @@ class RecepctorExcel extends Component
         // Loguear el array completo
         Log::info('Datos registrados:', $array);
 
-        
+        $idLibro = $this->libroid($data['libro'],$data['empresa']);
+        $dniruc = $data['correntistaData']['ruc_emisor'];
+        $idCorrentista = $this->correntistaid($dniruc,$data['empresa']);
+        $idCuenta = $this->cuentaid($cuenta['cuenta'],$data['empresa']);
+        if(!empty($data['CC'])){
+            $idcc = $this->centroDeCostosid($data['CC'],$data['empresa']);
+        }else{
+            $idcc = null;
+        }
 
         Tabla::create(['id_empresa' => $data['empresa'],
             'Mes' => $data['fecha_vaucher'] ? date('m', strtotime($data['fecha_vaucher'])) : null,
-            'Libro' => $data['libro'] ?? null,
+            'Libro' => $idLibro['id'] ?? null,
             'Vou' => $mov ?? null,
             'Fecha_Vou' => $data['fecha_vaucher'] ?? null,
             'GlosaGeneral' => isset($data['glosa']) ? strtoupper($data['glosa']) : null,
-            'Corrent' => $data['correntistaData']['dni'] ?? $data['correntistaData']['ruc_emisor'] ?? null,
+            'Corrent' => $idCorrentista['id'] ?? null,
             'TDoc' => $data['tdoc'] ?? null,
             'Ser' => $data['ser'] ?? null,
             'Num' => $data['num'] ?? null,
-            'Cnta' => $cuenta['cuenta'] ?? null,
+            'Cnta' => $idCuenta['id'] ?? null,
             'DebeHaber' => $cuenta['DebeHaber'] ?? null,
             'MontSoles' => $cuenta['monto'] ?? $cuenta['precioTotal'] ?? null,
             'MontDolares' =>  null,
             'TipCam' => $data['TipCam'] ?? null,
             'GlosaEpecifica' => isset($data['GlosaEpecifica']) ? strtoupper($data['GlosaEpecifica']) : (isset($data['glosa']) ? strtoupper($data['glosa']) : null),
-            'CC' => $cuenta['CC'] ?? null,
+            'CC' => $idcc['id'] ?? null,
             'TipMedioDePago' => $data['TipMedioDePago'] ?? null,
             'Fecha_Doc' => $data['fecha_doc'] ?? null,
             'Fecha_Ven' => $data['fecha_ven'] ?? null,
@@ -965,7 +974,7 @@ class RecepctorExcel extends Component
             'TOpIgv' => $data['opigv'] ?? null,
             'BasImp' => $data['bas_imp'] ?? null,
             'IGV' => $data['igv'] ?? null,
-            'NoGravadas' => $data['no_gravadas'] ?? null,
+            'NoGravadas' => $data['NoGravadas'] ?? null,
             'ISC' => $data['ISC'] ?? null,
             'ImpBolPla' => $data['ImpBolPla'] ?? null,
             'OtroTributo' => $data['OtroTributo'] ?? null,
@@ -993,7 +1002,26 @@ class RecepctorExcel extends Component
         Log::info('Inserted into Tabla successfully');
     }
 
-    
+    public function libroid($libro,$empresaid){
+        $idlibro = Libro::select('id')->where('N',$libro)->where('id_empresa',$empresaid)->first();
+        return $idlibro;
+    }
+
+    public function correntistaid($correstinta,$empresaid){
+        $idCorrentista = Correntista::select('id')->where('ruc_emisor',$correstinta)->where('id_empresas',$empresaid)->first();
+        return $idCorrentista;
+    }
+
+    public function cuentaid($cuenta,$empresaid){
+        $idcuenta = PlanContable::select('id')->where('CtaCtable',$cuenta)->where('id_empresas',$empresaid)->first();
+        return $idcuenta;
+    }
+
+    public function centroDeCostosid($cuenta,$empresaid){
+        $idcc = CentroDeCostos::select('id')->where('Id_cc',$cuenta)->where('id_empresa',$empresaid)->first();
+        return $idcc;
+    }
+
     public function render()
     {
         return view('livewire.recepctor-excel');

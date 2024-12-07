@@ -13,6 +13,9 @@ use App\Models\EstadoDocumento;
 use App\Models\TipoComprobantePagoDocumento;
 use App\Models\Estado;
 use App\Models\Tabla;
+use App\Models\Correntista;
+use App\Models\PlanContable;
+use App\Models\CentroDeCostos;
 use Exception;
 use Illuminate\Support\Facades\Session;
 
@@ -214,7 +217,6 @@ class CompraVentaTable extends Component
     private function insertIntoTabla($mov,$data,$cuenta)
     {
         Log::info('Inserting into Tabla', ['data' => $data]);
-        Log::info($cuenta);
         
         $array = [
             'id_empresa' => $data['empresa'],
@@ -269,23 +271,34 @@ class CompraVentaTable extends Component
         // Loguear el array completo
         Log::info('Datos registrados:', $array);
 
+        $idLibro = $this->libroid($data['libro'],$data['empresa']);
+        $dniruc = $data['correntistaData']['dni'] ?? $data['correntistaData']['ruc'];
+        $idCorrentista = $this->correntistaid($dniruc,$data['empresa']);
+        $idCuenta = $this->cuentaid($cuenta['cuenta'],$data['empresa']);
+        if(!empty($data['CC'])){
+            $idcc = $this->centroDeCostosid($data['CC'],$data['empresa']);
+        }else{
+            $idcc = null;
+        }
+        
+
         Tabla::create(['id_empresa' => $data['empresa'],
             'Mes' => $data['fecha_vaucher'] ? date('m', strtotime($data['fecha_vaucher'])) : null,
-            'Libro' => $data['libro'] ?? null,
+            'Libro' => $idLibro['id'] ?? null,
             'Vou' => $mov ?? null,
             'Fecha_Vou' => $data['fecha_vaucher'] ?? null,
             'GlosaGeneral' => isset($data['glosa']) ? strtoupper($data['glosa']) : null,
-            'Corrent' => $data['correntistaData']['dni'] ?? $data['correntistaData']['ruc_emisor'] ?? null,
+            'Corrent' => $idCorrentista['id'] ?? null,
             'TDoc' => $data['tdoc'] ?? null,
             'Ser' => $data['ser'] ?? null,
             'Num' => $data['num'] ?? null,
-            'Cnta' => $cuenta['cuenta'] ?? null,
+            'Cnta' => $idCuenta['id'] ?? null,
             'DebeHaber' => $cuenta['DebeHaber'] ?? null,
             'MontSoles' => $cuenta['monto'] ?? $cuenta['precioTotal'] ?? null,
             'MontDolares' =>  null,
             'TipCam' => $data['TipCam'] ?? null,
             'GlosaEpecifica' => isset($data['GlosaEpecifica']) ? strtoupper($data['GlosaEpecifica']) : (isset($data['glosa']) ? strtoupper($data['glosa']) : null),
-            'CC' => $cuenta['CC'] ?? null,
+            'CC' => $idcc['id'] ?? null,
             'TipMedioDePago' => $data['TipMedioDePago'] ?? null,
             'Fecha_Doc' => $data['fecha_doc'] ?? null,
             'Fecha_Ven' => $data['fecha_ven'] ?? null,
@@ -320,6 +333,25 @@ class CompraVentaTable extends Component
         Log::info('Inserted into Tabla successfully');
     }
 
+    public function libroid($libro,$empresaid){
+        $idlibro = Libro::select('id')->where('N',$libro)->where('id_empresa',$empresaid)->first();
+        return $idlibro;
+    }
+
+    public function correntistaid($correstinta,$empresaid){
+        $idCorrentista = Correntista::select('id')->where('ruc_emisor',$correstinta)->where('id_empresas',$empresaid)->first();
+        return $idCorrentista;
+    }
+
+    public function cuentaid($cuenta,$empresaid){
+        $idcuenta = PlanContable::select('id')->where('CtaCtable',$cuenta)->where('id_empresas',$empresaid)->first();
+        return $idcuenta;
+    }
+
+    public function centroDeCostosid($cuenta,$empresaid){
+        $idcc = CentroDeCostos::select('id')->where('Id_cc',$cuenta)->where('id_empresa',$empresaid)->first();
+        return $idcc;
+    }
 
     public function render()
     {

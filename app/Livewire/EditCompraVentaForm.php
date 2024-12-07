@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use App\Models\CentroDeCostos;
 use App\Services\CompraVentaService;
+use Illuminate\Support\Facades\Session;
 
 class EditCompraVentaForm extends Component
 {
@@ -30,6 +31,8 @@ class EditCompraVentaForm extends Component
         'imp_bol_pla' => 'nullable|numeric',
         'otro_tributo' => 'nullable|numeric',
     ];
+    public $idEmpresa;
+
 
     public function boot(CompraVentaService $compraVentaService)
     {
@@ -38,10 +41,10 @@ class EditCompraVentaForm extends Component
 
     public function mount($index, $dataItem)
     {
+        $this->idEmpresa = Session::get('EmpresaId');
         $this->index = $index;
         $this->dataItem = $dataItem;
-        Log::info('Sacame el dataItem: ',$this->dataItem);
-        $this->libros = Libro::whereIn('N', ['01', '02'])->get();
+        $this->libros = Libro::whereIn('N', ['01', '02'])->where('id_empresa',$this->idEmpresa['id'])->get();
         $this->opigvs = Opigv::all();
         $this->estado_docs = EstadoDocumento::all();
         $this->estados = Estado::all()->map(function ($estado) {
@@ -163,17 +166,17 @@ class EditCompraVentaForm extends Component
 
     #[On('EdTraspasoCC1')]
     public function handleEdTraspasoCC1($traspado){
-        $this -> dataItem['cc1'] = $traspado['Id'];
+        $this -> dataItem['cc1'] = $traspado['Id_cc'];
     }
 
     #[On('EdTraspasoCC2')]
     public function handleEdTraspasoCC2($traspado){
-        $this -> dataItem['cc2'] = $traspado['Id'];
+        $this -> dataItem['cc2'] = $traspado['Id_cc'];
     }
 
     #[On('EdTraspasoCC3')]
     public function handleEdTraspasoCC3($traspado){
-        $this -> dataItem['cc3'] = $traspado['Id'];
+        $this -> dataItem['cc3'] = $traspado['Id_cc'];
     }
 
 
@@ -340,7 +343,7 @@ class EditCompraVentaForm extends Component
 
     private function validarCuenta($cuenta, $mensajeError) {
         if (!empty($cuenta)) {
-            $cuentaValida = PlanContable::where('CtaCtable', $cuenta)->first();
+            $cuentaValida = PlanContable::where('CtaCtable', $cuenta)->where('id_empresas',$this->idEmpresa['id'])->first();
             if (!$cuentaValida) {
                 session()->flash('error', $mensajeError);
                 return false;
@@ -352,7 +355,7 @@ class EditCompraVentaForm extends Component
     // Método para validar si el Centro de Costos existe
     private function validarCentroCostos($cc, $mensajeError) {
         if (!empty($cc)) {
-            $centroValido = CentroDeCostos::where('Id', $cc)->first();
+            $centroValido = CentroDeCostos::where('Id', $cc)->where('id_empresa',$this->idEmpresa['id'])->first();
             if (!$centroValido) {
                 session()->flash('error', $mensajeError);
                 return false;

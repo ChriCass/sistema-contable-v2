@@ -27,7 +27,7 @@
                                 @php $contador = 1; @endphp
                                 @foreach ($centroDeCostos as $resultado)
                                     <tr>
-                                        <td class="px-2 py-1 border-b text-center">{{ $resultado->Id }}</td>
+                                        <td class="px-2 py-1 border-b text-center">{{ $resultado->Id_cc }}</td>
                                         <td class="px-2 py-1 border-b text-left">{{ $resultado->Descripcion }}</td>
                                         <td class="px-2 py-1 border-b text-center">
                                             <button  

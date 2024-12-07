@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Correntista;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Session;
 
 class CorrentistaInput extends Component
 {
@@ -173,8 +174,11 @@ class CorrentistaInput extends Component
                 return;
             }
     
+            $empresaId = Session::get('EmpresaId');
+            
             // Si no existe, lo creamos
             Correntista::create([
+                'id_empresas' => $empresaId['id'],
                 'ruc_emisor' => $data['ruc'] ?? $data['dni'],
                 'nombre_o_razon_social' => $data['nombre_o_razon_social'] ?? $data['nombre'] ?? 'Nombre no disponible',
                 'estado_del_contribuyente' => $data['estado_del_contribuyente'] ?? null,

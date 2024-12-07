@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use App\Services\CompraVentaService;
 use SebastianBergmann\Type\TrueType;
+use Illuminate\Support\Facades\Session;
 
 class CompraVentaForm extends Component
 {
@@ -51,6 +52,7 @@ class CompraVentaForm extends Component
     ];
 
     public $mostrarFormulario = false; // Propiedad para controlar visibilidad
+    public $idEmpresa;
 
     public function toggleFormulario()
     {
@@ -60,7 +62,8 @@ class CompraVentaForm extends Component
 
     public function mount()
     {
-        $this->libros = Libro::whereIn('N', ['01', '02'])->get();
+        $this->idEmpresa = Session::get('EmpresaId');
+        $this->libros = Libro::whereIn('N', ['01', '02'])->where('id_empresa',$this->idEmpresa['id'])->get();
         $this->opigvs = Opigv::all();
         $this->estado_docs = EstadoDocumento::all();
         $this->estados = Estado::all()->map(function ($estado) {
@@ -350,17 +353,17 @@ class CompraVentaForm extends Component
 
     #[On('TraspasoCC1')]
     public function handleTraspasoCC1($traspado){
-        $this -> cc1 = $traspado['Id'];
+        $this -> cc1 = $traspado['Id_cc'];
     }
 
     #[On('TraspasoCC2')]
     public function handleTraspasoCC2($traspado){
-        $this -> cc2 = $traspado['Id'];
+        $this -> cc2 = $traspado['Id_cc'];
     }
 
     #[On('TraspasoCC3')]
     public function handleTraspasoCC3($traspado){
-        $this -> cc3 = $traspado['Id'];
+        $this -> cc3 = $traspado['Id_cc'];
     }
 
     public function resetFields()
@@ -421,7 +424,8 @@ class CompraVentaForm extends Component
     // Método para validar si la cuenta existe en el Plan Contable
     private function validarCuenta($cuenta, $mensajeError) {
         if (!empty($cuenta)) {
-            $cuentaValida = PlanContable::where('CtaCtable', $cuenta)->first();
+            //$this->idEmpresa
+            $cuentaValida = PlanContable::where('CtaCtable', $cuenta)->where('id_empresas',$this->idEmpresa['id'])->first();
             if (!$cuentaValida) {
                 session()->flash('error', $mensajeError);
                 return false;
@@ -433,7 +437,7 @@ class CompraVentaForm extends Component
     // Método para validar si el Centro de Costos existe
     private function validarCentroCostos($cc, $mensajeError) {
         if (!empty($cc)) {
-            $centroValido = CentroDeCostos::where('Id', $cc)->first();
+            $centroValido = CentroDeCostos::where('Id', $cc)->where('id_empresa',$this->idEmpresa['id'])->first();
             if (!$centroValido) {
                 session()->flash('error', $mensajeError);
                 return false;

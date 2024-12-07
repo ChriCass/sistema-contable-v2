@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use App\Models\PlanContable;
 use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Session;
 
 class CuadroDeCuentas extends Component
 {
@@ -15,12 +16,14 @@ class CuadroDeCuentas extends Component
     public $seleccionados = 2;
     public $selector;
     public $cuentaTraspaso;
+    public $empresaId;
 
     #[On('ModalCuentas')]
     public function handleModalCuentas($modal)
     {
         $this -> openModal = $modal['modal'];  
         $this -> cuentaTraspaso = $modal['traspaso']; 
+        $this -> empresaId = Session::get('EmpresaId');
     }
 
     public function seleccionar($id)
@@ -32,6 +35,7 @@ class CuadroDeCuentas extends Component
         if (strlen($value) >= 2){
             $this -> planContable = PlanContable::where('CtaCtable', 'like', '%' . $value . '%')
                 ->orWhere('Descripcion', 'like', '%' . $value . '%')
+                ->where('id_empresas',$this->empresaId['id'])
                 ->get();
         } else {
             $this -> planContable = null;

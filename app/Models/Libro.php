@@ -17,15 +17,10 @@ class Libro extends Model
     public $timestamps = false;
 
     // Define la clave primaria si no es 'id'
-    protected $primaryKey = 'N';
-
-    // Laravel por defecto asume que la clave primaria es un entero que se autoincrementa.
-    // Como la clave es una cadena (VARCHAR), debes indicarlo:
-    protected $keyType = 'string';
-    public $incrementing = false;
+    protected $primaryKey = 'id';
 
     // Define los atributos que se pueden asignar masivamente
-    protected $fillable = ['N', 'DESCRIPCION'];
+    protected $fillable = ['id','id_empresa','N', 'DESCRIPCION'];
 
     // Si quieres usar la funcionalidad de asignación masiva, también deberías proteger
     // los atributos que no quieres que sean asignados masivamente:

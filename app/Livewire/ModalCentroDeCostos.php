@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\CentroDeCostos;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class ModalCentroDeCostos extends Component
 {
@@ -20,9 +21,10 @@ class ModalCentroDeCostos extends Component
     #[On('CentroCostos')]
     public function handleCentroCostos($modal)
     {
+        $IdEmpresa = Session::get('EmpresaId');
         $this -> openModal = $modal['modal'];  
         $this -> CCTraspaso = $modal['traspaso']; 
-        $this -> centroDeCostos = CentroDeCostos::all();
+        $this -> centroDeCostos = CentroDeCostos::where('id_empresa',$IdEmpresa['id'])->get();
     }
 
 
