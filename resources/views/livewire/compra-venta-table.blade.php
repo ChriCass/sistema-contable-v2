@@ -161,14 +161,5 @@
         </div>
     </div>
 
-    <h2>Data Received</h2>
-    <pre>{{ print_r($data, true) }}</pre>
-
-    <div>
-        <h2>Data from Uploaded Files</h2>
-        <pre>{{ print_r($data, true) }}</pre>
-    
-        <!-- Tu tabla de compra-venta aquí -->
-    </div>
-    
+   
 </div>

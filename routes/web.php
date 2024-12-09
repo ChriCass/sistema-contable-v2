@@ -8,6 +8,10 @@ use App\Livewire\CompraVentaFormView;
 use App\Livewire\RegistrarAsientoView;
 use App\Livewire\CorrentistaView;
 use App\Livewire\DiarioView;
+use App\Livewire\CajaDiarioView;
+use App\Livewire\HojaTrabajoView;
+use App\Livewire\PlanContableView;
+
 
 Route::redirect('/', '/login');
 
@@ -23,6 +27,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/registrar-asiento', RegistrarAsientoView::class)->name('empresa.registrar-asiento');
         Route::get('/correntista', CorrentistaView::class)->name('empresa.correntista');
         Route::get('/diario', DiarioView::class)->name('empresa.diario');
+        Route::get('/caja-diario', CajaDiarioView::class)->name('empresa.caja-diario');
+        Route::get('/hoja-trabajo', HojaTrabajoView::class)->name('empresa.hoja-trabajo');
+        Route::get('/plan-contable', PlanContableView::class)->name('empresa.plan-contable');
     });
 
 });

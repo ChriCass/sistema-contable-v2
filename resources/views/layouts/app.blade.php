@@ -99,11 +99,16 @@
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">R. Compras</a>
                             </div>
                         </div>
-                        <a href="/home" wire:navigate
-                            class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-500 hover:text-white">Caja-Diario</a>
-                        <a href="/home" wire:navigate
-                            class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-500 hover:text-white">Hoja
-                            de trabajo</a>
+                        <a href="{{ route('empresa.caja-diario', ['id' => $empresa->id]) }}" wire:navigate
+                        class="{{ request()->routeIs('empresa.caja-diario') ? 'bg-teal-500 text-white' : 'text-gray-900 hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-base font-medium">
+                        Caja-Diario
+                     </a>
+                     
+                     <a href="{{ route('empresa.hoja-trabajo', ['id' => $empresa->id]) }}" wire:navigate
+                     class="{{ request()->routeIs('empresa.hoja-trabajo') ? 'bg-teal-500 text-white' : 'text-gray-900 hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-base font-medium">
+                     Hoja de trabajo
+                 </a>
+                 
                             <a href="{{ route('empresa.diario', ['id' => $empresa->id]) }}" wire:navigate
                             class="{{ request()->routeIs('empresa.diario') ? 'bg-teal-500 text-white' : 'text-gray-900 hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-base font-medium">
                             Diario
@@ -118,9 +123,11 @@
                          
                         <a href="/home" wire:navigate
                             class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-500 hover:text-white">Mayor</a>
-                        <a href="/home" wire:navigate
-                            class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-500 hover:text-white">Plan
-                            contable</a>
+                            <a href="{{ route('empresa.plan-contable', ['id' => $empresa->id]) }}" wire:navigate
+                            class="{{ request()->routeIs('empresa.plan-contable') ? 'bg-teal-500 text-white' : 'text-gray-900 hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-base font-medium">
+                            Plan contable
+                        </a>
+                        
                     </nav>
                 </div>
             </div>

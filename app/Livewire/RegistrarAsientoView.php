@@ -11,7 +11,7 @@ use App\Models\TipoDeMoneda;
 class RegistrarAsientoView extends Component
 {
 
-    public $rows = []; // Propiedad para almacenar las filas
+     
     public $empresa;
     public $empresaId;
     public $libro;
@@ -34,101 +34,16 @@ class RegistrarAsientoView extends Component
     {
         $this->empresa = Empresa::findOrFail($id);
         $this->empresaId = $this->empresa->id;
-        // Inicializa con una fila vacía
-        $this->rows[] = $this->newRow();
+ 
         $this->libro = Libro::all();
         $this->mes = Mes::all();
         $this->moneda = TipoDeMoneda::whereIn('COD', ['PEN', 'USD'])->get();
         
 
-        $this->rows = [
-            [
-                'cn' => '',
-                'descripcion' => '',
-                'debe_soles' => '',
-                'haber_soles' => '',
-                'debe_dolares' => '',
-                'haber_dolares' => '',
-                'tc' => '',
-                'glosa_especifica' => '',
-                'numero' => '',
-                'razon_social' => '',
-                'tdoc' => '',
-                'serie' => '',
-                'num' => '',
-                'npag' => '',
-                'tpago' => '',
-                'descripcion_pago' => '',
-                'cc' => '',
-                'estado' => '',
-                'orden' => ''
-            ]
-        ];
-    
+        
     }
 
-    public function newRow()
-    {
-        return [
-            'cn' => '',
-            'asiento' => '',
-            'asiento_descripcion' => '',
-            'debe_soles' => '',
-            'haber' => '',
-            'debe_dolares' => '',
-            'haber_dolares' => '',
-            'tc' => '',
-            'glosa_especifica' => '',
-            'razon_social' => '',
-            'tdoc' => '',
-            'ser' => '',
-            'num' => '',
-            'n_pag' => '',
-            't_pago' => '',
-            'descripcion_pago' => '',
-            'cc' => '',
-            'estado' => '',
-            'orden' => ''
-        ];
-    }
-
-    public function addRow()
-    {
-        $this->rows[] = [
-            'cn' => '',
-            'descripcion' => '',
-            'debe_soles' => '',
-            'haber_soles' => '',
-            'debe_dolares' => '',
-            'haber_dolares' => '',
-            'tc' => '',
-            'glosa_especifica' => '',
-            'numero' => '',
-            'razon_social' => '',
-            'tdoc' => '',
-            'serie' => '',
-            'num' => '',
-            'npag' => '',
-            'tpago' => '',
-            'descripcion_pago' => '',
-            'cc' => '',
-            'estado' => '',
-            'orden' => ''
-        ];
-    }
-    public function saveRows($rows)
-    {
-        // Aquí puedes iterar sobre $rows y guardar los datos en la base de datos
-        // Esto puede incluir validaciones o transformaciones antes de guardar
-        // Ejemplo:
-        foreach ($rows as $row) {
-            // Lógica de guardado, como validar y almacenar en un modelo
-        }
-
-        // Opcionalmente, puedes enviar un mensaje de éxito a la vista:
-        session()->flash('message', 'Las filas se han guardado correctamente.');
-    }
-
+   
 
     public function render()
     {
