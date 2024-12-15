@@ -22,6 +22,10 @@ class CorrentistaInput extends Component
 
     public function mount($correntista = null, $isEditMode = false)
     {
+        $this -> verificarDatos($correntista,$isEditMode);
+    }
+    
+    public function verificarDatos($correntista,$isEditMode){
         if ($correntista) {
             if (isset($correntista['ruc_emisor'])) {
                 $this->tdoc = 'RUC';
@@ -38,8 +42,11 @@ class CorrentistaInput extends Component
         }
         $this->isEditMode = $isEditMode;
     }
-    
 
+    #[On('PasaCorrent')]
+    public function handlePasaCorrent($correntistaData){
+        $this -> verificarDatos($correntistaData,true);
+    }
 
 
     #[On('resetCorrentistaInput')]
