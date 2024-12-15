@@ -24,9 +24,9 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
                     <!-- Logo or Brand Name -->
-                    <a href="#" class="text-lg font-semibold text-gray-900">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
+                 
+                        <x-application-mark class="block h-9 w-auto" />
+                 
                 </div>
 
                 <!-- Right side -->

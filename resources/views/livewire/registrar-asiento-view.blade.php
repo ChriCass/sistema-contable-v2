@@ -34,7 +34,7 @@
                 <!-- Campo FECHA -->
                 <div class="text-sm font-bold flex items-center">
                     <span class="w-24">FECHA:</span>
-                    <x-datetime-picker class="flex-1 w-full" without-time placeholder="Appointment Date" id="fecha_ven"
+                    <x-datetime-picker class="flex-1 w-full" without-time placeholder="ingresar una fecha valida" id="fecha_ven"
                         wire:model="fecha_vaucher" required />
                 </div>
 
@@ -69,11 +69,23 @@
     <div  class="mt-5">
         <div class="bg-white shadow-md rounded-lg overflow-hidden max-w-full">
             <div class="p-4 overflow-x-auto">
-                <div class="flex gap-3 justify-between mb-4">
+                <div class="flex gap-3   mb-4">
                     <div>
-                        <x-alert title="Debe: {{$de}} Haber: {{$ha}} Diferencia: {{$to}} " info />
+                        <x-alert title="Debe: {{$de}}" />
                     </div>
+                    <div>
+                        <x-alert title="Haber: {{$ha}}" secondary/>
+                    </div>
+                    <div>
+                        @if ($to != 0)
+                            <x-alert title="Diferencia: {{$to}}" danger />
+                        @else
+                            <x-alert title="Diferencia: {{$to}}" positive />
+                        @endif
+                    </div>
+                    
                 </div>
+                
                 <table class="min-w-full bg-white border border-gray-200">
                     <thead>
                         <tr>
