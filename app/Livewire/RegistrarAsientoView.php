@@ -142,7 +142,10 @@ class RegistrarAsientoView extends Component
     }
 
     public function Procesar(){
-        $this -> ValidarDatos();
+        if ($this->ValidarDatos() == 2) {
+            return;
+        }
+        
         $dataGen = $this -> DataGeneral();
         
         foreach ($this -> dataAsiento as $Asiento){
@@ -232,14 +235,16 @@ class RegistrarAsientoView extends Component
 
         if (count($this -> dataAsiento) == 0){
             session()->flash('error','Tiene que haber cuentas registradas');
-            return;
+            return 2;
         } elseif ($this -> to <> 0){
             session()->flash('error','La diferencia tiene que ser cero');
-            return;
+            return 2;
         } elseif (($this -> mss * 1) <> Carbon::parse($this->fecha_vaucher)->month){
             session()->flash('error','El mes debe coincidir con la fecha');
-            return;
+            return 2;
         }
+
+        return 1;
     }
         
 
