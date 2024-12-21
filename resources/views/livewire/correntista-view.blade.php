@@ -7,6 +7,7 @@
 
     <!-- Sección de la Tabla de datos con Scroll -->
     <x-card class="p-4 overflow-x-auto">
+      @livewire('correntista-modal')
       @livewire('correntista-table')
     </x-card>
 

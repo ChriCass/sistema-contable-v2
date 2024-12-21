@@ -51,8 +51,11 @@
                     <div class="p-4 bg-white shadow-lg rounded-lg mt-4 mx-4">
                         <div class="flex items-center flex-col justify-center">
                             <div class="flex justify-center">
-                                <img src="https://via.placeholder.com/100" alt="Logo Empresa"
-                                    class="w-16 mb-2 h-16 rounded-full  text-center">
+                                <div class="relative w-16 h-16 mb-2">
+                                    <img src="{{ asset('img/default.webp') }}" alt="Logo Empresa" class="w-full h-full rounded-full object-cover">
+                                    <div class="absolute inset-0 bg-black opacity-30 rounded-full"></div> <!-- Fondo oscuro -->
+                                </div>
+                                
                             </div>
 
                             <div>
@@ -72,7 +75,7 @@
 
 
                         <div x-data="{
-                            dropdownOpen: {{ request()->routeIs('empresa.compra-venta') || request()->routeIs('empresa.registrar-asiento') || request()->routeIs('empresa.compra-venta.form') ? 'true' : 'false' }},
+                            dropdownOpen: {{ request()->routeIs('empresa.compra-venta') || request()->routeIs('empresa.lista-asiento') || request()->routeIs('empresa.registrar-asiento') || request()->routeIs('empresa.compra-venta.form') ? 'true' : 'false' }},
                             isActive: false
                         }" class="relative">
 
@@ -114,9 +117,9 @@
                                     class="{{ request()->routeIs('empresa.registrar-asiento') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
                                     Registrar Asiento
                                 </a>
-                                <a href="#"
+                                <a href="{{ route('empresa.lista-asiento', ['id' => $empresa->id]) }}"
                                     wire:navigate
-                                    class="{{ request()->routeIs('empresa.registrar-asiento') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
+                                    class="{{ request()->routeIs('empresa.lista-asiento') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
                                     Lista de asientos
                                 </a>
                             </div>
@@ -125,7 +128,7 @@
 
 
                         <div x-data="{
-                            dropdownOpen: {{ request()->routeIs('empresa.caja-diario') || request()->routeIs('empresa.hoja-trabajo') || request()->routeIs('empresa.diario') || request()->routeIs('empresa.correntista') || request()->routeIs('empresa.plan-contable') ? 'true' : 'false' }},
+                            dropdownOpen: {{   request()->routeIs('empresa.hoja-trabajo') || request()->routeIs('empresa.diario') || request()->routeIs('empresa.correntista') || request()->routeIs('empresa.plan-contable') ? 'true' : 'false' }},
                             isDropdownActive: false
                         }" class="relative">
 
@@ -149,12 +152,7 @@
                                 class="mt-2 space-y-1 bg-white rounded-lg ring-1 ring-black ring-opacity-5 z-10 overflow-hidden"
                                 x-cloak>
 
-                                <!-- Caja-Diario Link -->
-                                <a href="{{ route('empresa.caja-diario', ['id' => $empresa->id]) }}" wire:navigate
-                                    class="{{ request()->routeIs('empresa.caja-diario') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
-                                    Caja-Diario
-                                </a>
-
+                         
                                 <!-- Hoja de Trabajo Link -->
                                 <a href="{{ route('empresa.hoja-trabajo', ['id' => $empresa->id]) }}" wire:navigate
                                     class="{{ request()->routeIs('empresa.hoja-trabajo') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">

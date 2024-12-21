@@ -10,7 +10,10 @@
                     <div class="w-full sm:w-4/12 px-4 mb-6">
                         <!-- Card -->
                         <div class="bg-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                            <img src="https://via.placeholder.com/400x200" alt="Empresa 1" class="w-full h-48 object-cover">
+                            <div class="relative">
+                                <img src="{{ asset('img/default.webp') }}" alt="Logo Empresa"  class="w-full h-48 object-cover">
+                                <div class="absolute inset-0 bg-black opacity-50"></div>
+                              </div>
                             <div class="p-4">
                                 <h2 class="text-xl font-semibold">{{$e->Nombre}}</h2>
                                 <p class="mt-2 text-gray-600"><strong>RUC:</strong> {{$e->Ruc}}</p>

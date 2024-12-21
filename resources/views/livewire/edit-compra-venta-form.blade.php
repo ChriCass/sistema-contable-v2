@@ -45,9 +45,7 @@
                     <div class="w-full md:w-3/12 px-2 mb-4">
                         <x-select label="Código de Moneda" id="cod_moneda" wire:model.live="dataItem.cod_moneda" placeholder="Seleccionar moneda" :options="['PEN', 'USD']" required />
                     </div>
-                    <div class="w-full md:w-3/12 px-2 mb-4">
-                        @livewire('cambio-sunat', ['tipoCambio' => $dataItem['tip_cam'] ?? null])
-                    </div>
+                 
                 </div>
 
                 <!-- Tercera fila de inputs -->

@@ -64,10 +64,7 @@ final class PlanContableTable extends PowerGridComponent
 public function columns(): array
 {
     return [
-        Column::make('ID', 'id')
-            ->searchable()
-            ,
-
+   
    
         Column::make('CtaCtable', 'CtaCtable')
             ->searchable()
@@ -120,7 +117,7 @@ public function columns(): array
         Column::make('Libro', 'Libro')
             ->searchable()
      ,
-
+     Column::action('Acciones')->visibleInExport(visible: false)
         
     ];
 }
@@ -133,23 +130,20 @@ public function columns(): array
         ];
     }
 
-    #[\Livewire\Attributes\On('edit')]
-    public function edit($rowId): void
+    
+    public function actions(PlanContable $row): array
     {
-        $this->js('alert('.$rowId.')');
-    }
-
-  
-
-    /*
-    public function actionRules(PlanContable $row): array
-    {
-       return [
-            // Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($row) => $row->id === 1)
-                ->hide(),
+        return [
+            Button::add('view')
+                ->slot('Editar')
+                
+                ->class('bg-teal-500 hover:bg-teal-700 text-white py-2 px-4 rounded disabled opacity-50 cursor-not-allowed')
+           /*     ->route('apertura.edit', ['aperturaId' => $row->id] ),
+                Button::add('edit')
+                ->slot('Borrar')
+                ->id()
+                ->class('bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded')
+                ->openModal('delete-apertura-principal-modal', ['aperturaId' => $row->id]) */
         ];
     }
-    */
 }

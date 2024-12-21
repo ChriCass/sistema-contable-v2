@@ -54,9 +54,7 @@
                                 placeholder="Seleccionar moneda" :options="['PEN', 'USD']" required />
 
                         </div>
-                        <div class="w-full md:w-3/12 px-2 mb-4">
-                            @livewire('cambio-sunat')
-                        </div>
+                      
                     </div>
 
                     <!-- Tercera fila de inputs -->
