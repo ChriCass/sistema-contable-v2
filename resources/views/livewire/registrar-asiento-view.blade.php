@@ -1,6 +1,11 @@
 <div>
     <x-card>
-        <h1 class="font-bold">{{$tipForm}}</h1>
+        <div class="flex items-center space-x-4">
+            <h1 class="font-bold">{{$tipForm}}</h1>
+            @if ($origen == 'editar_asiento')
+                <x-button class="bg-red-500 hover:bg-red-600 text-white" label="Eliminar Asiento" wire:click="EliminarAsiento"/>
+            @endif
+        </div>
     </x-card>
       
     <x-card class="p-4 w-full mt-5">
@@ -50,9 +55,137 @@
                     <x-select class="flex-1 w-full" :options="$moneda" option-value="COD" option-label="COD"
                         id="moneda" wire:model="mon" placeholder="Moneda" />
                 </div>
-            </div>
 
-      
+                @if ($origen == 'editar_asiento')
+                    <!-- Campo Vaucher -->
+                    <div class="text-sm font-bold flex items-center">
+                        <span class="w-24">VAUCHER:</span>
+                        <x-input class="flex-1 w-full" wire:model="voucher" oninput="this.value = this.value.replace(/[^0-9]/g, '')" readonly></x-input>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        @if ($origen == 'editar_asiento' && $conven == '1')
+            <div class="w-full">
+                <h4 class="font-bold mb-3 mt-5">Datos de Comprobante</h4>
+            </div>
+            <div class="flex flex-wrap -mx-2">
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-datetime-picker class="flex-1 w-full" without-time placeholder="ingresar una fecha valida" id="fecha_emi"
+                    label="Fecha del Emision" wire:model="Fecha_Doc" required />
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-datetime-picker class="flex-1 w-full" without-time placeholder="ingresar una fecha valida" id="fecha_ven"
+                    label="Fecha Vcto/Pago" wire:model="Fecha_Ven" required />
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-select :options="$TipoDeDocumentos" option-value="N" option-label="DESCRIPCION" label="T.doc"
+                    placeholder="Seleccione el tipo de documento" wire:model="TDoc" />
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Serie" wire:model="Ser"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Año" wire:model="ADuaDsi"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Numero" wire:model="Num"/>
+                </div>
+
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Nro Final (Rango)"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-select 
+                        label="Tipo Doc Identidad" 
+                        :options="$TipoDeDocIdentidad" 
+                        option-value="N" 
+                        option-label="DESCRIPCION"
+                        placeholder="Seleccione el tipo de documento" 
+                        wire:model="idt02doc" 
+                    />
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Nro Doc Identidad" wire:model="ruc_emisor"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Razón Social" wire:model="nombre_o_razon_social"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-select  label="Tip IGV" :options="$TipoOpIgv" option-value="Id" option-label="Descripcion"
+                    placeholder="Seleccione el tipo de documento" wire:model="TOpIgv"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Base Imponible" wire:model="BasImp"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="IGV" wire:model="IGV"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Valor Adq. NG" wire:model="NoGravadas"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="ISC" wire:model="ISC"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="ICBPER" wire:model="ImpBolPla"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Otros Trib/ Cargos" wire:model="OtroTributo"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Total CP" wire:model="total"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-datetime-picker class="flex-1 w-full" without-time placeholder="ingresar una fecha valida" id="fecha_emi_mod"
+                    label="Fecha Emisión Mod" wire:model="FechaEMod" />
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-select  label="Tipo CP Modificado" :options="$TipoDeDocumentos" option-value="N" option-label="DESCRIPCION"
+                    placeholder="Seleccione el tipo de documento" wire:model="TDocEMod" />
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Serie CP Modificado" wire:model="SerEMod"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="COD. DAM O DSI" wire:model="CodDepenDUAoDSI"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="Nro CP Modificado" wire:model="NumEMod"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-datetime-picker class="flex-1 w-full" without-time placeholder="ingresar una fecha valida" id="fecha_ven"
+                    label="FecEmiDetr" wire:model="FecEmiDetr"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-input 
+                        label="NumConsDetra" wire:model="NumConstDer"/>
+                </div>
+                <div class="w-full md:w-2/12 px-2 mb-4">
+                    <x-select  label="ClasBienes" :options="$TipoDeClasificacionBienes" option-value="N" option-label="DESCRIPCION"
+                    placeholder="Seleccione el tipo de documento" wire:model="ClasBienes"/>
+                </div>
+            </div>
+        @endif
+        <div>
+        
         </div>
         <div x-data="{ openForm: @entangle('openForm') }">
             <button @click="$wire.set('openForm', !openForm)"

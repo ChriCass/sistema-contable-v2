@@ -112,7 +112,7 @@
                                     Compra-Venta
                                 </a>
 
-                                <a href="{{ route('empresa.registrar-asiento', ['id' => $empresa->id]) }}"
+                                <a href="{{ route('empresa.registrar-asiento', ['id' => $empresa->id, 'origen' => 'registrar_asiento']) }}"
                                     wire:navigate
                                     class="{{ request()->routeIs('empresa.registrar-asiento') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
                                     Registrar Asiento

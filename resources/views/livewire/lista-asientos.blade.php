@@ -20,7 +20,7 @@
                 <!-- Campo LIBRO -->
                 <div class="text-sm font-bold flex items-center">
                     <span class="w-24">LIBRO:</span>
-                    <x-select class="flex-1 w-full" :options="$libro" option-value="N" option-label="DESCRIPCION"
+                    <x-select class="flex-1 w-full" :options="$libro" option-value="id" option-label="DESCRIPCION"
                         id="libro" wire:model="lib" placeholder="Seleccionar tipo de libro" />
                 </div>
 
@@ -45,7 +45,7 @@
                     <thead>
                         <tr>
                             <th class="py-2 px-4 bg-gray-200 text-xs font-semibold text-gray-700 uppercase">MES</th>
-                            <th class="py-2 px-4 bg-gray-200 text-xs font-semibold text-gray-700 uppercase">DESCRIPCIÓN</th>
+                            <th class="py-2 px-4 bg-gray-200 text-xs font-semibold text-gray-700 uppercase">LIBRO</th>
                             <th class="py-2 px-4 bg-gray-200 text-xs font-semibold text-gray-700 uppercase">VOUCHER</th>
                             <th class="py-2 px-4 bg-gray-200 text-xs font-semibold text-gray-700 uppercase">FECHA</th>
                             <th class="py-2 px-4 bg-gray-200 text-xs font-semibold text-gray-700 uppercase">GLOSA GENERAL</th>
@@ -63,8 +63,7 @@
                                 <td class="px-2 py-1 border-b text-center">{{ $dataItem->Fecha_Vou ?? '-' }}</td>
                                 <td class="px-2 py-1 border-b text-center">{{ $dataItem->GlosaGeneral ?? '-' }}</td>
                                 <td class="px-2 py-1 border-b text-center">
-                                    <x-button icon="pencil" label="Editar" />
-                                    <x-button negative icon="trash" label="Eliminar" />
+                                    <x-button icon="pencil" label="Editar" wire:navigate href="{{ route('empresa.registrar-asiento', ['id' => $empresa->id, 'origen' => 'editar_asiento', 'libro' => $dataItem->id, 'mes' => $dataItem->idMes, 'vou' => $dataItem->Vou]) }}"/>
                                 </td>
                             </tr>
                         @endforeach
