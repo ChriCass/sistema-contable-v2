@@ -12,6 +12,8 @@ use App\Livewire\CajaDiarioView;
 use App\Livewire\HojaTrabajoView;
 use App\Livewire\PlanContableView;
 use App\Livewire\ListaAsientos;
+use App\Livewire\RegistrosGeneralesView;
+
 
 Route::redirect('/', '/login');
 
@@ -31,6 +33,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/caja-diario', CajaDiarioView::class)->name('empresa.caja-diario');
         Route::get('/hoja-trabajo', HojaTrabajoView::class)->name('empresa.hoja-trabajo');
         Route::get('/plan-contable', PlanContableView::class)->name('empresa.plan-contable');
+        Route::get('/registros-generales', RegistrosGeneralesView::class)->name('empresa.registros-generales');
     });
 
 });
