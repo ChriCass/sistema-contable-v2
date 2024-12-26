@@ -85,7 +85,7 @@
                                     <td class="px-2 py-1 border-b text-center">{{ $libros->where('N', $dataItem['libro'])->first()->DESCRIPCION ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['fecha_doc'] ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['fecha_ven'] ?? '-' }}</td>
-                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['correntistaData']['dni'] ?? ($dataItem['correntistaData']['ruc'] ?? '-') }}</td>
+                                    <td class="px-2 py-1 border-b text-center">{{ $dataItem['correntistaData']['dni'] ?? ($dataItem['correntistaData']['ruc'] ?? $dataItem['correntistaData']['ruc_emisor'] ?? '-') }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['correntistaData']['nombre'] ?? ($dataItem['correntistaData']['nombre_o_razon_social'] ?? '-') }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $ComprobantesPago->where('N', $dataItem['tdoc'])->first()->DESCRIPCION ?? '-' }}</td>
                                     <td class="px-2 py-1 border-b text-center">{{ $dataItem['ser'] ?? '-' }}</td>
