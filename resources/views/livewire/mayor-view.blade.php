@@ -1,6 +1,6 @@
 <div x-data="{ showCard: @entangle('showCard'), animating: false }" x-init="$watch('showCard', value => { animating = value })">
     <x-card class="mb-3">
-        <h1 class="font-bold">Diario</h1>
+        <h1 class="font-bold">Mayor</h1>
     </x-card>
     <x-card class="p-4 mb-4">
         <div class="flex items-center space-x-4">
@@ -8,26 +8,24 @@
                 <x-select wire:model="mes" :options="$meses" option-label="MES" option-value="N"
                     placeholder="Seleccione un mes" />
             </div>
-         
-                <div class="flex items-center space-x-2">
-                    <input type="radio" name="mes" value="x Mes" wire:model="tipoMes" checked>
-                    <label class="text-sm">x Mes</label>
-                    <input type="radio" name="mes" value="hasta Mes" wire:model="tipoMes">
-                    <label class="text-sm">hasta Mes</label>
-                </div>
-                <button class="bg-blue-600 text-white py-2 px-6 rounded shadow-lg" wire:click="procesarDiario">
-                    Procesar
-                </button>
-            
-                @if (session()->has('success'))
-                    <div class="mt-4 p-4 bg-gray-100 rounded shadow">
-                        <h5 class="text-lg font-semibold mb-2">¿Prefieres empezar de cero?</h5>
-                        <x-button wire:click="deleteResult" icon="trash" label="Borrar registros generados" danger />
-                    </div>
-                @endif
+            <div class="flex items-center space-x-2">
+                <input type="radio" name="mes" value="x Mes" wire:model="tipoMes" checked>
+                <label class="text-sm">x Mes</label>
+                <input type="radio" name="mes" value="hasta Mes" wire:model="tipoMes">
+                <label class="text-sm">hasta Mes</label>
             </div>
-            
- 
+            <button class="bg-blue-600 text-white py-2 px-6 rounded shadow-lg" wire:click="procesarDiario">
+                Procesar
+            </button>
+
+             
+            @if (session()->has('success'))
+            <div class="mt-4 p-4 bg-gray-100 rounded shadow">
+                <h5 class="text-lg font-semibold mb-2">¿Prefieres empezar de cero?</h5>
+                <x-button wire:click="deleteResult" icon="trash" label="Borrar registros generados" danger />
+            </div>
+        @endif
+        </div>
     </x-card>
 
     <!-- Mostrar las alertas según el mensaje de la sesión -->

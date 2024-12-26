@@ -145,7 +145,7 @@
 
 
                         <div x-data="{
-                            dropdownOpen: {{ request()->routeIs('empresa.hoja-trabajo') || request()->routeIs('empresa.diario') || request()->routeIs('empresa.correntista') || request()->routeIs('empresa.plan-contable') ? 'true' : 'false' }},
+                            dropdownOpen: {{ request()->routeIs('empresa.hoja-trabajo') || request()->routeIs('empresa.diario') || request()->routeIs('empresa.mayor') || request()->routeIs('empresa.correntista') || request()->routeIs('empresa.plan-contable') ? 'true' : 'false' }},
                             isDropdownActive: false
                         }" class="relative">
 
@@ -195,7 +195,7 @@
                                 </a>
 
                                 <!-- Mayor Link -->
-                                <a href="/home" wire:navigate
+                                <a href="{{ route('empresa.mayor', ['id' => $empresa->id]) }}" wire:navigate
                                     class="{{ request()->routeIs('empresa.mayor') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
                                     Mayor
                                 </a>
