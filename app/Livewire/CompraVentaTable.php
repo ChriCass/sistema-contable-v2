@@ -272,7 +272,7 @@ class CompraVentaTable extends Component
         Log::info('Datos registrados:', $array);
 
         $idLibro = $this->libroid($data['libro'],$data['empresa']);
-        $dniruc = $data['correntistaData']['dni'] ?? $data['correntistaData']['ruc'];
+        $dniruc = $data['correntistaData']['dni'] ?? $data['correntistaData']['ruc'] ?? $data['correntistaData']['ruc_emisor'];
         $idCorrentista = $this->correntistaid($dniruc,$data['empresa']);
         $idCuenta = $this->cuentaid($cuenta['cuenta'],$data['empresa']);
         if(!empty($data['CC'])){
