@@ -2,13 +2,12 @@
 
 namespace App\Livewire;
 
-use App\Models\Libro;
+use App\Models\Empresa;
 use App\Models\Mes;
 use Livewire\Component;
-use App\Models\Empresa;
 
-class HojaTrabajoView extends Component
-{
+class HojaTrabajoAnalisisView extends Component
+{   
     public $empresa;
     public $empresaId;
     public $años;
@@ -23,6 +22,6 @@ class HojaTrabajoView extends Component
     }
     public function render()
     {
-        return view('livewire.hoja-trabajo-view')->layout('layouts.app', ['empresa' => $this->empresa]);
+        return view('livewire.hoja-trabajo-analisis-view')->layout('layouts.app', ['empresa' => $this->empresa]);
     }
 }
