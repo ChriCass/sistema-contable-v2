@@ -15,6 +15,9 @@ use App\Livewire\ListaAsientos;
 use App\Livewire\RegistrosGeneralesView;
 use App\Livewire\MayorView;
 use App\Livewire\HojaTrabajoAnalisisView;
+use App\Livewire\PlanContableGenForm;
+use App\Livewire\ImportadorGeneral;
+
 Route::redirect('/', '/login');
 
 // Agrupar rutas que requieren autenticación
@@ -38,7 +41,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         
         Route::get('/hoja-trabajo', HojaTrabajoView::class)->name('empresa.hoja-trabajo');
         Route::get('/plan-contable', PlanContableView::class)->name('empresa.plan-contable');
+        Route::get('/plan-contable-form', PlanContableGenForm::class)->name('empresa.plan-contable-gen');
         Route::get('/registros-generales', RegistrosGeneralesView::class)->name('empresa.registros-generales');
+
+        Route::get('/importador-general', ImportadorGeneral::class)->name('empresa.importador-general');
     });
 
 });
