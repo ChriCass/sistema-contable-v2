@@ -73,6 +73,8 @@ class CuadroDeCuentas extends Component
                 $this->dispatch('Edcta_detracc', $traspado);
             }elseif ($this -> cuentaTraspaso == 13){
                 $this->dispatch('Reg_Cuenta', $traspado);
+            }elseif ($this -> cuentaTraspaso == 14){
+                $this->dispatch('Cuenta_Pendiente', $traspado);
             } 
         }else{
             session()->flash('error', 'Elige una cuenta.');
