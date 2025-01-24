@@ -18,6 +18,9 @@ use App\Livewire\HojaTrabajoAnalisisView;
 use App\Livewire\PlanContableGenForm;
 use App\Livewire\ImportadorGeneral;
 
+use App\Livewire\ReportePendientesView;
+use App\Livewire\ReporteDetalleView;
+
 Route::redirect('/', '/login');
 
 // Agrupar rutas que requieren autenticación
@@ -35,6 +38,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/diario', DiarioView::class)->name('empresa.diario');
         Route::get('/mayor', MayorView::class)->name('empresa.mayor');
         Route::get('/caja-diario', CajaDiarioView::class)->name('empresa.caja-diario');
+        Route::get('/pendientes', ReportePendientesView::class)->name('empresa.pendientes');
+        Route::get('/detalle', ReporteDetalleView::class)->name('empresa.detalle');
         Route::prefix('/hoja-trabajo/{tipoDeCuenta}')->group(function (){
             Route::get('/', HojaTrabajoAnalisisView::class)->name('empresa.hoja-trabajo-analisis');
         }); 
