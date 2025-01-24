@@ -77,9 +77,13 @@
 
 
                         <div x-data="{
-                            dropdownOpen: {{ request()->routeIs('empresa.compra-venta') || request()->routeIs('empresa.lista-asiento') || request()->routeIs('empresa.registrar-asiento') || request()->routeIs('empresa.compra-venta.form') || (request()->routeIs('empresa.registros-generales') 
-            && in_array(request()->get('origen'), ['ventas','compras']))
-            ? 'true' : 'false' }},
+                            dropdownOpen: {{ request()->routeIs('empresa.compra-venta') ||
+                            request()->routeIs('empresa.lista-asiento') ||
+                            request()->routeIs('empresa.registrar-asiento') ||
+                            request()->routeIs('empresa.compra-venta.form') ||
+                            (request()->routeIs('empresa.registros-generales') && in_array(request()->get('origen'), ['ventas', 'compras']))
+                                ? 'true'
+                                : 'false' }},
                             isActive: false
                         }" class="relative">
 
@@ -107,23 +111,21 @@
                                     wire:navigate
                                     class="{{ request()->routeIs('empresa.registros-generales') && request()->get('origen') === 'ventas'
                                         ? 'bg-teal-500 text-white font-medium'
-                                        : 'hover:bg-teal-500 hover:text-white'
-                                    }} 
+                                        : 'hover:bg-teal-500 hover:text-white' }} 
                                     block px-4 py-2 text-sm text-gray-700 rounded-md transition duration-150 ease-in-out">
-                                     R. Ventas
-                                 </a>
-                                 
+                                    R. Ventas
+                                </a>
+
                                 <!-- R. Compras -->
                                 <a href="{{ route('empresa.registros-generales', ['id' => $empresa->id, 'origen' => 'compras']) }}"
                                     wire:navigate
                                     class="{{ request()->routeIs('empresa.registros-generales') && request()->get('origen') === 'compras'
                                         ? 'bg-teal-500 text-white font-medium'
-                                        : 'hover:bg-teal-500 hover:text-white'
-                                    }}
+                                        : 'hover:bg-teal-500 hover:text-white' }}
                                     block px-4 py-2 text-sm text-gray-700 rounded-md transition duration-150 ease-in-out">
-                                     R. Compras
-                                 </a>
-                                 
+                                    R. Compras
+                                </a>
+
                                 <!-- Para mantener la ruta activa y el fondo del padre, usar request()->routeIs() -->
                                 <a href="{{ route('empresa.compra-venta', ['id' => $empresa->id]) }}" wire:navigate
                                     class="{{ request()->routeIs('empresa.compra-venta') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-gray-700 text-sm">
@@ -145,7 +147,7 @@
 
 
                         <div x-data="{
-                            dropdownOpen: {{ request()->routeIs('empresa.hoja-trabajo') || request()->routeIs('empresa.diario') || request()->routeIs('empresa.mayor') || request()->routeIs('empresa.correntista') || request()->routeIs('empresa.plan-contable') ? 'true' : 'false' }},
+                            dropdownOpen: {{ request()->routeIs('empresa.plan-contable-gen') || (request()->routeIs('empresa.importador-general') && request()->get('origen') == 'plan_contable') || request()->routeIs('empresa.hoja-trabajo') || request()->routeIs('empresa.diario') || request()->routeIs('empresa.mayor') || request()->routeIs('empresa.correntista') || request()->routeIs('empresa.plan-contable') ? 'true' : 'false' }},
                             isDropdownActive: false
                         }" class="relative">
 
@@ -202,8 +204,55 @@
 
                                 <!-- Plan Contable Link -->
                                 <a href="{{ route('empresa.plan-contable', ['id' => $empresa->id]) }}" wire:navigate
-                                    class="{{ request()->routeIs('empresa.plan-contable') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
+                                    class="{{ request()->routeIs('empresa.plan-contable') || (request()->routeIs('empresa.importador-general') && request()->get('origen') == 'plan_contable') || request()->routeIs('empresa.plan-contable-gen') ? 'bg-teal-500 text-white font-medium' : 'hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-gray-700 text-sm">
                                     Plan contable
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div x-data="{
+                            dropdownOpen: {{ request()->routeIs('empresa.hoja-trabajo') || request()->routeIs('empresa.diario') || request()->routeIs('empresa.mayor') || request()->routeIs('empresa.correntista') || request()->routeIs('empresa.plan-contable') ? 'true' : 'false' }},
+                            isDropdownActive: false
+                        }" class="relative">
+
+                            <button @click="dropdownOpen = !dropdownOpen; isDropdownActive = dropdownOpen"
+                                :class="{ 'border-b-2 border-teal-500 text-teal-500': dropdownOpen }"
+                                class="text-gray-900 w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center hover:border-b-2 hover:border-teal-500 hover:text-teal-500">
+                                Procesos
+                                <svg :class="{ 'transform rotate-180 text-teal-500': dropdownOpen }"
+                                    class="ml-1 w-4 h-4 transition-transform duration-300 ease-in-out" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+
+
+                            <div x-show="dropdownOpen" x-transition:enter="transition-opacity duration-300 ease-out"
+                                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                                x-transition:leave="transition-opacity duration-300 ease-in"
+                                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                                class="mt-2 space-y-1 bg-white rounded-lg ring-1 ring-black ring-opacity-5 z-10 overflow-hidden"
+                                x-cloak>
+
+
+                                <!-- Hoja de Trabajo Link -->
+                                <a href="/home" wire:navigate
+                                    class="{{ request()->routeIs('empresa') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
+                                    Proceso1
+                                </a>
+
+                                <!-- Diario Link -->
+                                <a href="/home" wire:navigate
+                                    class="{{ request()->routeIs('empresa') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
+                                    Proceso2
+                                </a>
+
+                                <!-- Pendientes Link -->
+                                <a href="/home" wire:navigate
+                                    class="{{ request()->routeIs('empresa') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
+                                    Proceso3
                                 </a>
 
                             </div>
@@ -281,7 +330,8 @@
     </div>
 
     @stack('modals')
-
+    @wireUiScripts
+    @livewire('livewire-ui-modal')
     @livewireScripts
 </body>
 

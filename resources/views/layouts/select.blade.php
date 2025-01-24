@@ -28,9 +28,13 @@
                         <x-application-mark class="block h-9 w-auto" />
                  
                 </div>
-
+                <div class="flex flex-wrap justify-center -mx-4">
+                
                 <!-- Right side -->
-                <div class="flex items-center">
+                <div class="flex items-center gap-3">
+                    <div >
+                        @livewire('empresa-modal')
+                    </div>
                     <!-- User Dropdown -->
                     <div x-data="{ open: false }" class="relative">
                         <button @click="open = !open" class="flex items-center text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
@@ -55,6 +59,15 @@
 
     <!-- Page Content -->
     <main >
+        <div class="p-4">
+            @if (session()->has('success'))
+            <x-alert title="¡Operación exitosa!" positive>
+                {{ session('success') }}
+            </x-alert>
+        @endif
+        </div>
+
+    
         {{ $slot }}
     </main>
 

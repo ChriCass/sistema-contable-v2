@@ -65,7 +65,7 @@ public function columns(): array
 {
     return [
    
-   
+        
         Column::make('CtaCtable', 'CtaCtable')
             ->searchable()
            ,
@@ -137,13 +137,12 @@ public function columns(): array
             Button::add('view')
                 ->slot('Editar')
                 
-                ->class('bg-teal-500 hover:bg-teal-700 text-white py-2 px-4 rounded disabled opacity-50 cursor-not-allowed')
-           /*     ->route('apertura.edit', ['aperturaId' => $row->id] ),
-                Button::add('edit')
+                ->class('bg-teal-500 hover:bg-teal-700 text-white py-2 px-4 rounded')
+              ->route('empresa.plan-contable-gen', ['CtaCtableEdit' => $row->id, 'origen' => 'edit', 'id' => $this->empresaId] ),
+              Button::add('edit')
                 ->slot('Borrar')
-                ->id()
                 ->class('bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded')
-                ->openModal('delete-apertura-principal-modal', ['aperturaId' => $row->id]) */
+                ->openModal('delete-plan-contable-modal', ['CtaCtableId' => $row->id, 'id' => $this->empresaId]) 
         ];
     }
 }

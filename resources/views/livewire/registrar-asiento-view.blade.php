@@ -185,7 +185,9 @@
             </div>
         @endif
         <div>
-        
+            <div class="mt-3">
+                @livewire('choose-n-send-diff-options-modal')
+            </div>
         </div>
         <div x-data="{ openForm: @entangle('openForm') }">
             <button @click="$wire.set('openForm', !openForm)"
@@ -196,6 +198,7 @@
             <div x-show="openForm" class="mt-5" x-transition>
                 @livewire('reusable-form', ['tra' => $tra])
             </div>
+       
         </div>
     </x-card>
 
