@@ -5,7 +5,7 @@
             <!-- Alerta de peligro -->
             <x-alert title="Acción Permanente" negative>
                 Esta es una acción permanente que no puede deshacerse. ¿Estás seguro de que deseas eliminar esta apertura con numero: {{$cuenta->CtaCtable}} y descripcion: {{$cuenta->Descripcion}}? 
-                Todos los datos asociados se perderán para siempre.
+                Todos los datos asociados se perderán para siempres.
             </x-alert>
 
             <div class="mt-4 flex justify-end w-full px-4">
