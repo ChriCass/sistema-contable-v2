@@ -185,9 +185,7 @@
             </div>
         @endif
         <div>
-            <div class="mt-3">
-                @livewire('choose-n-send-diff-options-modal')
-            </div>
+           
         </div>
         <div x-data="{ openForm: @entangle('openForm') }">
             <button @click="$wire.set('openForm', !openForm)"
@@ -219,7 +217,9 @@
                             <x-alert title="Diferencia: {{$to}}" positive />
                         @endif
                     </div>
-                    
+                    <div class="mt-3">
+                        @livewire('choose-n-send-diff-options-modal')
+                    </div>
                 </div>
                 
                 <table class="min-w-full bg-white border border-gray-200">

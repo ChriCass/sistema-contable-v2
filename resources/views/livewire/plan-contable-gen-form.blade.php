@@ -16,47 +16,56 @@
             <x-button class="mb-5 mt-3" href="{{ route('empresa.plan-contable', ['id' => $empresa->id]) }}" wire:navigate
                 secondary label="Atras" />
             <div class="flex flex-wrap">
-                <div class="w-full md:w-2/12 px-2">
+                <div class="w-full">
+                    <h4 class="font-bold mb-3 mt-5">Nombre de cuenta</h4>
+                </div>
+                <div class="w-full md:w-4/12 px-2">
                     <x-input wire:model="CtaCtable" label="Cuenta contable" />
                     @if (empty($CtaCtable) && $origen == 'edit')
                         <span class="text-yellow-500 text-xs">No hay datos referido a este campo</span>
                     @endif
                 </div>
-                <div class="w-full md:w-2/12 px-2">
+                <div class="w-full md:w-4/12 px-2">
                     <x-input wire:model="Descripcion" label="Descripción" />
                     @if (empty($Descripcion) && $origen == 'edit')
                         <span class="text-yellow-500 text-xs">No hay datos referido a este campo</span>
                     @endif
                 </div>
-                <div class="w-full md:w-2/12 px-2">
+                <div class="w-full md:w-4/12 px-2 mb-4">
                     <x-input wire:model="Nivel" label="Nivel" />
                     @if (empty($Nivel) && $origen == 'edit')
                         <span class="text-yellow-500 text-xs">No hay datos referido a este campo</span>
                     @endif
                 </div>
-                <div class="w-full md:w-2/12 px-2">
+                <div class="w-full">
+                    <h4 class="font-bold mb-3 mt-5">Destinos</h4>
+                </div>
+                <div class="w-full md:w-3/12 px-2">
                     <x-input wire:model="Dest1D" label="Destino 1D" />
                     @if (empty($Dest1D) && $origen == 'edit')
                         <span class="text-yellow-500 text-xs">No hay datos referido a este campo</span>
                     @endif
                 </div>
-                <div class="w-full md:w-2/12 px-2">
+                <div class="w-full md:w-3/12 px-2">
                     <x-input wire:model="Dest1H" label="Destino 1H" />
                     @if (empty($Dest1H) && $origen == 'edit')
                         <span class="text-yellow-500 text-xs">No hay datos referido a este campo</span>
                     @endif
                 </div>
-                <div class="w-full md:w-2/12 px-2">
+                <div class="w-full md:w-3/12 px-2">
                     <x-input wire:model="Dest2D" label="Destino 2D" />
                     @if (empty($Dest2D) && $origen == 'edit')
                         <span class="text-yellow-500 text-xs">No hay datos referido a este campo</span>
                     @endif
                 </div>
-                <div class="w-full md:w-2/12 px-2">
+                <div class="w-full md:w-3/12 px-2 mb-4">
                     <x-input wire:model="Dest2H" label="Destino 2H" />
                     @if (empty($Dest2H) && $origen == 'edit')
                         <span class="text-yellow-500 text-xs">No hay datos referido a este campo</span>
                     @endif
+                </div>
+                <div class="w-full">
+                    <h4 class="font-bold mb-3 mt-5">Configuracion hoja de trabajo</h4>
                 </div>
                 <div class="w-full md:w-2/12 px-2">
                     <x-select label="Ajuste 79" wire:model="Ajust79" option-value="id" option-label="descripcion"
@@ -100,7 +109,7 @@
                     @endif
                 </div>
             </div>
-            <div class="flex   -mx-2 mt-4 justify-between">
+            <div class="flex  mt-5 -mx-2 justify-between">
 
 
 
