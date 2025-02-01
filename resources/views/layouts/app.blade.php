@@ -147,7 +147,7 @@
 
 
                         <div x-data="{
-                            dropdownOpen: {{ request()->routeIs('empresa.plan-contable-gen') || (request()->routeIs('empresa.importador-general') && request()->get('origen') == 'plan_contable') || request()->routeIs('empresa.hoja-trabajo') || request()->routeIs('empresa.diario') || request()->routeIs('empresa.mayor') || request()->routeIs('empresa.correntista') || request()->routeIs('empresa.plan-contable') ? 'true' : 'false' }},
+                            dropdownOpen: {{ request()->routeIs('empresa.plan-contable-gen') || (request()->routeIs('empresa.importador-general') && request()->get('origen') == 'plan_contable') || request()->routeIs('empresa.hoja-trabajo') || request()->routeIs('empresa.diario') || request()->routeIs('empresa.mayor') ? 'true' : 'false' }},
                             isDropdownActive: false
                         }" class="relative">
 
@@ -190,31 +190,17 @@
                                     Pendientes
                                 </a>
 
-                                <!-- Correntistas Link -->
-                                <a href="{{ route('empresa.correntista', ['id' => $empresa->id]) }}" wire:navigate
-                                    class="{{ request()->routeIs('empresa.correntista') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
-                                    Correntistas
-                                </a>
-
                                 <!-- Mayor Link -->
                                 <a href="{{ route('empresa.mayor', ['id' => $empresa->id]) }}" wire:navigate
                                     class="{{ request()->routeIs('empresa.mayor') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
                                     Mayor
                                 </a>
 
-                                <!-- Plan Contable Link -->
-                                <a href="{{ route('empresa.plan-contable', ['id' => $empresa->id]) }}" wire:navigate
-                                    class="{{ request()->routeIs('empresa.plan-contable') || (request()->routeIs('empresa.importador-general') && request()->get('origen') == 'plan_contable') || request()->routeIs('empresa.plan-contable-gen') ? 'bg-teal-500 text-white font-medium' : 'hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-gray-700 text-sm">
-                                    Plan contable
-                                </a>
 
                             </div>
                         </div>
 
-                        <div x-data="{
-                            dropdownOpen: {{ request()->routeIs('empresa.hoja-trabajo') || request()->routeIs('empresa.diario') || request()->routeIs('empresa.mayor') || request()->routeIs('empresa.correntista') || request()->routeIs('empresa.plan-contable') ? 'true' : 'false' }},
-                            isDropdownActive: false
-                        }" class="relative">
+                        <div  class="relative">
 
                             <button @click="dropdownOpen = !dropdownOpen; isDropdownActive = dropdownOpen"
                                 :class="{ 'border-b-2 border-teal-500 text-teal-500': dropdownOpen }"
@@ -258,6 +244,42 @@
                             </div>
                         </div>
 
+
+                        <div x-data="{
+                            dropdownOpen: {{ request()->routeIs('empresa.correntista') || request()->routeIs('empresa.plan-contable') ? 'true' : 'false' }},
+                            isDropdownActive: false
+                        }" class="relative">
+
+                            <button @click="dropdownOpen = !dropdownOpen; isDropdownActive = dropdownOpen"
+                                :class="{ 'border-b-2 border-teal-500 text-teal-500': dropdownOpen }"
+                                class="text-gray-900 w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center hover:border-b-2 hover:border-teal-500 hover:text-teal-500">
+                                Configuraciones
+                                <svg :class="{ 'transform rotate-180 text-teal-500': dropdownOpen }"
+                                    class="ml-1 w-4 h-4 transition-transform duration-300 ease-in-out" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div x-show="dropdownOpen" x-transition:enter="transition-opacity duration-300 ease-out"
+                                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                                x-transition:leave="transition-opacity duration-300 ease-in"
+                                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                                class="mt-2 space-y-1 bg-white rounded-lg ring-1 ring-black ring-opacity-5 z-10 overflow-hidden"
+                                x-cloak>
+                                <!-- Plan Contable Link -->
+                                <a href="{{ route('empresa.plan-contable', ['id' => $empresa->id]) }}" wire:navigate
+                                    class="{{ request()->routeIs('empresa.plan-contable') || (request()->routeIs('empresa.importador-general') && request()->get('origen') == 'plan_contable') || request()->routeIs('empresa.plan-contable-gen') ? 'bg-teal-500 text-white font-medium' : 'hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md text-gray-700 text-sm">
+                                    Plan contable
+                                </a>
+
+                                <!-- Correntistas Link -->
+                                <a href="{{ route('empresa.correntista', ['id' => $empresa->id]) }}" wire:navigate
+                                    class="{{ request()->routeIs('empresa.correntista') ? 'bg-teal-500 text-white font-medium' : ' hover:bg-teal-500 hover:text-white' }} block px-3 py-2 rounded-md  text-gray-700 text-sm">
+                                    Correntistas
+                                </a>
+                            </div>
+                        </div>
                     </nav>
                 </div>
             </div>
