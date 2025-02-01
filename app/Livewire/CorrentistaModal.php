@@ -110,24 +110,30 @@ class CorrentistaModal extends Component
                 // Sumar 1 al valor de id en PHP
                 $id = $entidad ? $entidad->id + 1 : null;
 
-                Log::info('Entidad creada', [
-                    'id' => $id,
-                    'descripcion' => $this->entidad,
-                    'estado_contribuyente' => '-',
-                    'estado_domicilio' => '-',
-                    'provincia' => '-',
-                    'distrito' => '-',
-                    'idt02doc' => '1'
-                ]);
-
+               
                 Correntista::create([
                     'id' => $id,
-                    'descripcion' => $this->entidad,
-                    'doc_ident' => $this->docIdent, // Asegúrate de guardar el documento de identidad
-                    'estado_contribuyente' => '-',
-                    'estado_domicilio' => '-',
-                    'provincia' => '-',
+                    'id_empresas' => $this->empresaId,
+                    'ruc_emisor' =>  $this->docIdent,
+                    'nombre_o_razon_social' => $this->entidad,
+                    'estado_del_contribuyente' => '-',
+                    'condicion_de_domicilio' => '-',
+                    'ubigeo' => '-',
+                    'tipo_de_via' => '-',
+                    'nombre_de_via' => '-',
+                    'codigo_de_zona' =>'-',
+                    'tipo_de_zona' => '-',
+                    'numero' => '-',
+                    'interior' => '-',
+                    'lote' => '-',
+                    'dpto' => '-',
+                    'manzana' => '-',
+                    'kilometro' => '-',
                     'distrito' => '-',
+                    'provincia' => '-',
+                    'departamento' => '-',
+                    'direccion_simple' => '-',
+                    'direccion' => '-',
                     'idt02doc' => $this->tipoDocId
                 ]);
 

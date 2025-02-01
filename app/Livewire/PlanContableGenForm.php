@@ -78,7 +78,7 @@ class PlanContableGenForm extends Component
     {
         $this->validate([
             'CtaCtable' => 'required|max:15',
-            'Descripcion' => 'required|max:200',
+            'Descripcion' => 'required|max:255',
             'Nivel' => 'required|integer',
             'Ajust79' => 'required|max:1',
             'Esf' => 'required|max:1',
