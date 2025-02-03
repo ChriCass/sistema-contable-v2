@@ -20,17 +20,25 @@
                     </x-alert>
                 @endif
 
+                <div class="w-full">
+                    <h4 class="font-bold mb-3">Cuenta:</h4>
+                </div>
+
                 <div class="flex flex-wrap -mx-2 mt-4">
+                    <x-input placeholder="Buscar..." wire:model.live="cuenta"></x-input>
+                </div>
+
+                <div class="flex flex-wrap -mx-2 mt-4">
+                    <h4 class="font-bold mb-3">Filtro:</h4>
                     <div class="w-full px-2">
                         <select id="filterColumn" 
                                 x-data 
                                 x-ref="filterColumn" 
                                 @change="$wire.set('filterColumn', $refs.filterColumn.value).then(() => $wire.applyFilters())" 
                                 class="w-full mb-3 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-                            <option value="id">ID</option>
-                            <option value="Nombre">Nombre</option>
-                            <option value="Anno">Año</option>
-                            <option value="Ruc">RUC</option>
+                            <option value="nombre_o_razon_social">RAZON SOCIAL</option>
+                            <option value="TDoc">T. DOC</option>
+                            <option value="ruc_emisor">RUC</option>
                         </select>
                     
                         <x-input id="searchInput" 
@@ -46,11 +54,16 @@
                     <table id="pendientesTable" class="min-w-full bg-white">
                         <thead>
                             <tr>
-                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Selecc.</th>
-                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Id</th>
-                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Nombre</th>
-                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Año</th>
+                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">ACCION</th>
                                 <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">RUC</th>
+                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">RAZON SOCIAL</th>
+                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">T. DOC</th>
+                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">SERIE</th>
+                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">NUMERO</th>
+                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">CUENTA</th>
+                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">NOMBRE CUENTA</th>
+                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">DEBE</th>
+                                <th class="py-2 px-4 bg-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">HABER</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,10 +75,15 @@
                                             {{ collect($contenedor)->contains('id', $d->id) ? 'Quitar' : 'Seleccionar' }}
                                         </button>
                                     </td>
-                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->id }}</td>
-                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->Nombre }}</td>
-                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->Anno }}</td>
-                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->Ruc }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->ruc_emisor }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->nombre_o_razon_social }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->TDoc }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->Ser }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->Num }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->CtaCtable }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->Descripcion }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->Debe }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ $d->Haber }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

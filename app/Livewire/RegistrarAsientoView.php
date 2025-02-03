@@ -251,6 +251,18 @@ class RegistrarAsientoView extends Component
         
     }
 
+    #[On('PasarDeudas')]
+    public function handlePasarDeudas($data){
+        
+        foreach($data as $dat){
+            $this -> dataAsiento[] = $dat;
+        }
+
+        count($this->dataAsiento) !== 0 ? $this->DebeHaber($this->dataAsiento) : ($this->de = $this->ha = $this->to = 0);
+        Session::put('RegistroAsiento', $this->dataAsiento);
+        
+    }
+
     public function EliminarFila($index){
         if (isset($this->dataAsiento[$index])) {
             unset($this->dataAsiento[$index]);
